@@ -1,0 +1,672 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Generated Quiz - QuizVerse AI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --royal: #25143D;
+            --purple: #4C1D95;
+            --primary: #6D28D9;
+            --pink: #DB2777;
+            --background: #F8F6FC;
+            --white: #FFFFFF;
+            --border: #EDE6F5;
+            --muted: #81758F;
+            --green: #15803D;
+            --green-bg: #DCFCE7;
+            --red: #B91C1C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: #2D2140;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            min-height: 72px;
+            padding: 12px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--royal);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--pink);
+        }
+
+        .back-link {
+            text-decoration: none;
+            background: var(--purple);
+            color: white;
+            padding: 11px 18px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #EDE9FE;
+            color: var(--purple);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 13px;
+        }
+
+        .heading h1 {
+            font-size: 32px;
+            color: var(--royal);
+            margin-bottom: 10px;
+        }
+
+        .heading h1 span {
+            color: var(--pink);
+        }
+
+        .heading p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .quiz-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 19px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            text-align: center;
+        }
+
+        .info-card small {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .info-card strong {
+            color: var(--purple);
+            font-size: 17px;
+            overflow-wrap: anywhere;
+        }
+
+        .question-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(37, 20, 61, 0.04);
+        }
+
+        .question-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .question-number,
+        .type-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .question-number {
+            background: #EDE9FE;
+            color: var(--purple);
+        }
+
+        .type-badge {
+            background: #FCE7F3;
+            color: #BE185D;
+        }
+
+        .question-text {
+            font-size: 16px;
+            line-height: 1.7;
+            font-weight: 700;
+            color: var(--royal);
+            margin-bottom: 20px;
+            overflow-wrap: anywhere;
+        }
+
+        .options {
+            display: grid;
+            gap: 11px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #FCFAFF;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .option-letter {
+            min-width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #EDE9FE;
+            color: var(--purple);
+            border-radius: 7px;
+            font-weight: 800;
+        }
+
+        .correct-option {
+            border: 1.5px solid #86EFAC;
+            background: var(--green-bg);
+        }
+
+        .correct-option .option-letter {
+            background: var(--green);
+            color: white;
+        }
+
+        .answer-label {
+            margin-left: auto;
+            color: var(--green);
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .answer-box {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--green-bg);
+            border: 1px solid #BBF7D0;
+            border-radius: 10px;
+        }
+
+        .answer-box h4 {
+            color: var(--green);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .answer-box p {
+            color: #166534;
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .explanation-box {
+            margin-top: 12px;
+            padding: 16px;
+            background: #F5F3FF;
+            border: 1px solid #DDD6FE;
+            border-radius: 10px;
+        }
+
+        .explanation-box h4 {
+            color: var(--purple);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .explanation-box p {
+            color: #57486A;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .empty-message {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            color: var(--red);
+        }
+
+        .action-area {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 28px;
+        }
+
+        .action-area p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            border-radius: 9px;
+            padding: 13px 20px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .save-btn {
+            background: linear-gradient(120deg, var(--purple), var(--pink));
+            color: white;
+        }
+
+        .dashboard-btn {
+            background: #EDE9FE;
+            color: var(--purple);
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        @media(max-width: 600px) {
+            .navbar {
+                padding: 12px 4%;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .quiz-info {
+                grid-template-columns: 1fr;
+            }
+
+            .heading h1 {
+                font-size: 25px;
+            }
+
+            .question-card {
+                padding: 18px;
+            }
+
+            .option {
+                flex-wrap: wrap;
+            }
+
+            .answer-label {
+                margin-left: 40px;
+            }
+
+            .action-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .buttons form {
+                width: 100%;
+            }
+
+            .btn {
+                text-align: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a href="{{ url_for('student_dashboard') }}" class="logo">
+        Quiz<span>Verse</span> AI
+    </a>
+
+    <a href="{{ url_for('student_dashboard') }}" class="back-link">
+        ← Dashboard
+    </a>
+
+</nav>
+
+<main class="container">
+
+    <div class="heading">
+
+        <div class="badge">✨ AI GENERATED QUIZ</div>
+
+        <h1>Your <span>Quiz Questions</span></h1>
+
+        <p>
+            Review your questions, correct answers and detailed explanations.
+        </p>
+
+    </div>
+
+    {# Use questions passed directly by Flask #}
+    {% set display_topic = topic|default('AI Quiz') %}
+    {% set display_difficulty = difficulty|default('Medium') %}
+
+    <div class="quiz-info">
+
+        <div class="info-card">
+            <small>Quiz Topic</small>
+            <strong>{{ display_topic }}</strong>
+        </div>
+
+        <div class="info-card">
+            <small>Difficulty</small>
+            <strong>{{ display_difficulty }}</strong>
+        </div>
+
+        <div class="info-card">
+            <small>Total Questions</small>
+            <strong>{{ questions|length }}</strong>
+        </div>
+
+    </div>
+
+    {% if questions %}
+
+        {% for question in questions %}
+
+            {% set correct = question.get('correct_answer', '')|string|trim %}
+            {% set question_type = question.get('type', 'MCQ')|string|trim|lower %}
+
+            {% set is_tf = question_type in ['true/false', 'true_false', 'true false'] %}
+
+            {% set is_fill = question_type in [
+                'fill in the blanks',
+                'fill_blank',
+                'fill in blanks',
+                'fill-in-the-blanks',
+                'fill in blank'
+            ] %}
+
+            <section class="question-card">
+
+                <div class="question-header">
+
+                    <span class="question-number">
+                        QUESTION {{ loop.index }}
+                    </span>
+
+                    <span class="type-badge">
+
+                        {% if is_tf %}
+                            TRUE / FALSE
+                        {% elif is_fill %}
+                            FILL IN THE BLANKS
+                        {% else %}
+                            MULTIPLE CHOICE
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+                <h3 class="question-text">
+                    {{ question.get('question', 'Question not available') }}
+                </h3>
+
+                {% if is_tf %}
+
+                    {% set correct_tf = correct|lower %}
+
+                    <div class="options">
+
+                        <div class="option {% if correct_tf in ['a', 'true'] %}correct-option{% endif %}">
+
+                            <span class="option-letter">A</span>
+
+                            <span>True</span>
+
+                            {% if correct_tf in ['a', 'true'] %}
+                                <span class="answer-label">✓ CORRECT</span>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="option {% if correct_tf in ['b', 'false'] %}correct-option{% endif %}">
+
+                            <span class="option-letter">B</span>
+
+                            <span>False</span>
+
+                            {% if correct_tf in ['b', 'false'] %}
+                                <span class="answer-label">✓ CORRECT</span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="answer-box">
+
+                        <h4>✓ Correct Answer</h4>
+
+                        <p>
+                            {% if correct_tf in ['a', 'true'] %}
+                                True
+                            {% elif correct_tf in ['b', 'false'] %}
+                                False
+                            {% else %}
+                                {{ correct or 'Answer not available' }}
+                            {% endif %}
+                        </p>
+
+                    </div>
+
+                {% elif is_fill %}
+
+                    <div class="answer-box">
+
+                        <h4>✓ Correct Answer</h4>
+
+                        <p>
+                            {{ correct or 'Answer not available' }}
+                        </p>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="options">
+
+                        {% for key in ['A', 'B', 'C', 'D'] %}
+
+                            {% set option_text = question.get('option_' ~ key|lower, '') %}
+
+                            {% if option_text %}
+
+                                {% set is_correct = correct|upper == key or correct|lower == option_text|string|trim|lower %}
+
+                                <div class="option {% if is_correct %}correct-option{% endif %}">
+
+                                    <span class="option-letter">
+                                        {{ key }}
+                                    </span>
+
+                                    <span>{{ option_text }}</span>
+
+                                    {% if is_correct %}
+                                        <span class="answer-label">✓ CORRECT</span>
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="answer-box">
+
+                        <h4>✓ Correct Answer</h4>
+
+                        <p>
+
+                            {% if correct|upper in ['A', 'B', 'C', 'D'] %}
+
+                                {{ correct|upper }} -
+                                {{ question.get('option_' ~ correct|lower, 'Answer not available') }}
+
+                            {% else %}
+
+                                {{ correct or 'Answer not available' }}
+
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+                <div class="explanation-box">
+
+                    <h4>💡 Explanation</h4>
+
+                    <p>
+                        {{ question.get('explanation', 'Explanation not available.') }}
+                    </p>
+
+                </div>
+
+            </section>
+
+        {% endfor %}
+
+        <div class="action-area">
+
+            <div>
+
+                <strong>Save your learning material</strong>
+
+                <p>
+                    Save these questions to review them later.
+                </p>
+
+            </div>
+
+            <div class="buttons">
+
+                <form method="POST"
+                      action="{{ url_for('student_save_ai_questions') }}">
+
+                    <button type="submit" class="btn save-btn">
+                        💾 Save Questions
+                    </button>
+
+                </form>
+
+                <a href="{{ url_for('student_dashboard') }}"
+                   class="btn dashboard-btn">
+
+                    ← Back to Dashboard
+
+                </a>
+
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-message">
+
+            <h3>No Questions Found</h3>
+
+            <p>Please generate a new AI quiz.</p>
+
+            <br>
+
+<a href="{{ url_for('generate_quiz_page') }}"
+   class="btn save-btn">
+    Generate Quiz
+</a>     
+   </div>
+
+    {% endif %}
+
+</main>
+
+<footer>
+    © 2026 QuizVerse AI | Smart Learning. Better Results.
+</footer>
+
+</body>
+</html>

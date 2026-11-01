@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}?v=1000">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<nav class="student-navbar">
+
+    <div class="student-logo">
+        🤖 QuizSphere AI
+    </div>
+
+
+    <div class="student-nav-links">
+
+        {% if user.role == "student" %}
+
+            <a href="{{ url_for('student_dashboard') }}">
+                Dashboard
+            </a>
+
+        {% elif user.role == "teacher" %}
+
+            <a href="{{ url_for('teacher_dashboard') }}">
+                Dashboard
+            </a>
+
+        {% endif %}
+
+
+        {% if user.role == "student" %}
+
+            <a href="{{ url_for('student_quizzes') }}">
+                Quizzes
+            </a>
+
+            <a href="{{ url_for('results_history') }}">
+                Results
+            </a>
+
+        {% endif %}
+
+
+        <a href="{{ url_for('profile') }}"
+           class="active">
+            Profile
+        </a>
+
+
+        <a href="{{ url_for('logout') }}"
+           class="logout-link">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================================================
+     PROFILE PAGE
+========================================================= -->
+
+<main class="profile-page">
+
+
+    <!-- =====================================================
+         PROFILE HEADER
+    ====================================================== -->
+
+    <section class="profile-header">
+
+        <div class="profile-header-content">
+
+            <span class="profile-label">
+
+                {% if user.role == "student" %}
+                    🎓 STUDENT PORTAL
+                {% else %}
+                    👨‍🏫 TEACHER PORTAL
+                {% endif %}
+
+            </span>
+
+
+            <h1>
+                My Profile
+            </h1>
+
+
+            <p>
+                Manage your personal information and account settings.
+            </p>
+
+        </div>
+
+
+        <div class="profile-header-icon">
+
+            {% if user.role == "student" %}
+                🎓
+            {% else %}
+                👨‍🏫
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MAIN PROFILE CARD
+    ====================================================== -->
+
+    <section class="main-profile-card">
+
+
+        <!-- PROFILE PHOTO -->
+
+        <div class="profile-photo-section">
+
+            {% if user.profile_pic %}
+
+                <img
+                    src="{{ url_for('static',
+                    filename='uploads/' + user.profile_pic) }}"
+                    class="profile-photo"
+                    alt="Profile Photo"
+                >
+
+            {% else %}
+
+                <div class="profile-avatar">
+
+                    {% if user.role == "student" %}
+                        🎓
+                    {% else %}
+                        👨‍🏫
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- PROFILE BASIC INFORMATION -->
+
+        <div class="profile-main-info">
+
+            <span class="profile-status">
+                ● ACTIVE ACCOUNT
+            </span>
+
+
+            <h2>
+                {{ user.name }}
+            </h2>
+
+
+            <p class="profile-role">
+
+                {% if user.role == "student" %}
+
+                    🎓 Student
+
+                {% else %}
+
+                    👨‍🏫 Teacher
+
+                {% endif %}
+
+            </p>
+
+
+            <p class="profile-email">
+                ✉️ {{ user.email }}
+            </p>
+
+
+            <a href="{{ url_for('edit_profile') }}"
+               class="profile-edit-btn">
+
+                ✏️ Edit Profile
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PERSONAL INFORMATION
+    ====================================================== -->
+
+    <section class="profile-section">
+
+
+        <div class="profile-section-title">
+
+            <div class="profile-title-icon">
+                👤
+            </div>
+
+
+            <div>
+
+                <h2>
+                    Personal Information
+                </h2>
+
+                <p>
+                    Your basic personal details
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="profile-info-grid">
+
+
+            <!-- NAME -->
+
+            <div class="profile-info-card">
+
+                <div class="info-icon">
+                    👤
+                </div>
+
+                <div class="info-content">
+
+                    <small>
+                        Full Name
+                    </small>
+
+                    <strong>
+                        {{ user.name or "Not added" }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ROLE -->
+
+            <div class="profile-info-card">
+
+                <div class="info-icon">
+                    🎓
+                </div>
+
+                <div class="info-content">
+
+                    <small>
+                        Role
+                    </small>
+
+                    <strong>
+                        {{ user.role|capitalize }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ROLL NUMBER -->
+
+            {% if user.role == "student" %}
+
+            <div class="profile-info-card">
+
+                <div class="info-icon">
+                    🆔
+                </div>
+
+                <div class="info-content">
+
+                    <small>
+                        Roll Number
+                    </small>
+
+                    <strong>
+                        {{ user.roll_no or "Not added" }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+
+            <!-- GENDER -->
+
+            <div class="profile-info-card">
+
+                <div class="info-icon">
+                    ⚧
+                </div>
+
+                <div class="info-content">
+
+                    <small>
+                        Gender
+                    </small>
+
+                    <strong>
+                        {{ user.gender or "Not added" }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- EMAIL -->
+
+            <div class="profile-info-card">
+
+                <div class="info-icon">
+                    ✉️
+                </div>
+
+                <div class="info-content">
+
+                    <small>
+                        Email Address
+                    </small>
+
+                    <strong>
+                        {{ user.email or "Not added" }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CONTACT -->
+
+            <div class="profile-info-card">
+
+                <div class="info-icon">
+                    📞
+                </div>
+
+                <div class="info-content">
+
+                    <small>
+                        Contact Number
+                    </small>
+
+                    <strong>
+                        {{ user.contact or "Not added" }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ADDRESS -->
+
+            <div class="profile-info-card profile-address-card">
+
+                <div class="info-icon">
+                    📍
+                </div>
+
+                <div class="info-content">
+
+                    <small>
+                        Address
+                    </small>
+
+                    <strong>
+                        {{ user.address or "Not added" }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ACADEMIC / TEACHING INFORMATION
+    ====================================================== -->
+
+    <section class="profile-section">
+
+
+        <div class="profile-section-title">
+
+            <div class="profile-title-icon">
+
+                {% if user.role == "student" %}
+                    🎓
+                {% else %}
+                    📚
+                {% endif %}
+
+            </div>
+
+
+            <div>
+
+                {% if user.role == "student" %}
+
+                    <h2>
+                        Academic Information
+                    </h2>
+
+                    <p>
+                        Your learning information
+                    </p>
+
+                {% else %}
+
+                    <h2>
+                        Teaching Information
+                    </h2>
+
+                    <p>
+                        Your teaching information
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="profile-info-grid">
+
+
+            {% if user.role == "student" %}
+
+
+                <!-- AVAILABLE QUIZZES -->
+
+                <div class="profile-info-card">
+
+                    <div class="info-icon">
+                        📝
+                    </div>
+
+                    <div class="info-content">
+
+                        <small>
+                            Available Quizzes
+                        </small>
+
+                        <strong>
+                            {{ total_quizzes|default(0) }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- COMPLETED QUIZZES -->
+
+                <div class="profile-info-card">
+
+                    <div class="info-icon">
+                        🏆
+                    </div>
+
+                    <div class="info-content">
+
+                        <small>
+                            Completed Quizzes
+                        </small>
+
+                        <strong>
+                            {{ completed|default(0) }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- AVERAGE SCORE -->
+
+                <div class="profile-info-card">
+
+                    <div class="info-icon">
+                        🎯
+                    </div>
+
+                    <div class="info-content">
+
+                        <small>
+                            Average Score
+                        </small>
+
+                        <strong>
+                            {{ avg_score|default(0) }}%
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- TOTAL QUIZZES -->
+
+                <div class="profile-info-card">
+
+                    <div class="info-icon">
+                        📝
+                    </div>
+
+                    <div class="info-content">
+
+                        <small>
+                            Total Quizzes
+                        </small>
+
+                        <strong>
+                            {{ total_quizzes|default(0) }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- STUDENTS -->
+
+                <div class="profile-info-card">
+
+                    <div class="info-icon">
+                        👨‍🎓
+                    </div>
+
+                    <div class="info-content">
+
+                        <small>
+                            Students
+                        </small>
+
+                        <strong>
+                            {{ total_students|default(0) }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- QUIZ ATTEMPTS -->
+
+                <div class="profile-info-card">
+
+                    <div class="info-icon">
+                        📊
+                    </div>
+
+                    <div class="info-content">
+
+                        <small>
+                            Quiz Attempts
+                        </small>
+
+                        <strong>
+                            {{ total_attempts|default(0) }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ACCOUNT SECURITY
+    ====================================================== -->
+
+    <section class="profile-section">
+
+
+        <div class="profile-section-title">
+
+            <div class="profile-title-icon">
+                🔐
+            </div>
+
+
+            <div>
+
+                <h2>
+                    Account Security
+                </h2>
+
+                <p>
+                    Manage your account password
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="security-card">
+
+
+            <div class="security-icon">
+                🔑
+            </div>
+
+
+            <div class="security-info">
+
+                <small>
+                    Password
+                </small>
+
+                <strong>
+                    ••••••••••
+                </strong>
+
+            </div>
+
+
+            <a href="{{ url_for('change_password') }}"
+               class="security-btn">
+
+                🔑 Change Password
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="student-footer">
+
+    <strong>
+        🤖 QuizSphere AI
+    </strong>
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>

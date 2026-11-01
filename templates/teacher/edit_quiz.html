@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Quiz - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="teacher-navbar">
+
+    <div class="teacher-logo">
+        🤖 QuizSphere AI
+    </div>
+
+    <div class="teacher-nav-links">
+
+        <a href="{{ url_for('teacher_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('my_quizzes') }}">
+            My Quizzes
+        </a>
+
+        <a href="{{ url_for('create_quiz') }}">
+            Create Quiz
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- MAIN -->
+
+<main class="add-question-page">
+
+
+    <!-- HEADER -->
+
+    <section class="add-question-header">
+
+        <div class="add-question-icon">
+            ✏️
+        </div>
+
+        <div>
+
+            <h1>
+                Edit Quiz
+            </h1>
+
+            <p>
+                Update your quiz information.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- QUIZ INFORMATION -->
+
+    <section class="question-quiz-info">
+
+        <div>
+
+            <span>
+                QUIZ
+            </span>
+
+            <h2>
+                {{ quiz.title }}
+            </h2>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                SUBJECT
+            </span>
+
+            <strong>
+                {{ quiz.subject }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                QUESTIONS
+            </span>
+
+            <strong>
+                {{ quiz.total_questions }}
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- EDIT FORM -->
+
+    <section class="add-question-card">
+
+
+        <div class="question-card-title">
+
+            <div class="question-number">
+                ✏️
+            </div>
+
+            <div>
+
+                <h2>
+                    Edit Quiz Details
+                </h2>
+
+                <p>
+                    Change the information below and save your changes.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('edit_quiz', quiz_id=quiz.id) }}">
+
+
+            <!-- TITLE -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Quiz Title
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    value="{{ quiz.title }}"
+                    required>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    name="description"
+                    rows="5"
+                    placeholder="Enter quiz description...">{{ quiz.description or '' }}</textarea>
+
+            </div>
+
+
+            <!-- SUBJECT -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    name="subject"
+                    value="{{ quiz.subject or '' }}"
+                    required>
+
+            </div>
+
+
+            <!-- DURATION -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Duration (Minutes)
+                </label>
+
+                <input
+                    type="number"
+                    name="duration"
+                    value="{{ quiz.duration }}"
+                    min="1"
+                    required>
+
+            </div>
+
+
+            <!-- DIFFICULTY -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Difficulty
+                </label>
+
+                <select name="difficulty">
+
+                    <option value="Easy"
+                    {% if quiz.difficulty == "Easy" %}
+                    selected
+                    {% endif %}>
+                        Easy
+                    </option>
+
+                    <option value="Medium"
+                    {% if quiz.difficulty == "Medium" %}
+                    selected
+                    {% endif %}>
+                        Medium
+                    </option>
+
+                    <option value="Hard"
+                    {% if quiz.difficulty == "Hard" %}
+                    selected
+                    {% endif %}>
+                        Hard
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- QUESTION TYPE -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Question Type
+                </label>
+
+                <select name="question_type">
+
+                    <option value="MCQ"
+                    {% if quiz.question_type == "MCQ" %}
+                    selected
+                    {% endif %}>
+                        Multiple Choice Questions (MCQ)
+                    </option>
+
+                    <option value="True/False"
+                    {% if quiz.question_type == "True/False" %}
+                    selected
+                    {% endif %}>
+                        True / False
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- NUMBER OF QUESTIONS -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Number of Questions
+                </label>
+
+                <input
+                    type="number"
+                    name="number_of_questions"
+                    value="{{ quiz.number_of_questions or quiz.total_questions }}"
+                    min="1"
+                    required>
+
+            </div>
+
+
+            <!-- PASSING MARKS -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Passing Marks
+                </label>
+
+                <input
+                    type="number"
+                    name="passing_marks"
+                    value="{{ quiz.passing_marks or 1 }}"
+                    min="1"
+                    required>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="add-question-actions">
+
+
+                <a
+                    href="{{ url_for('my_quizzes') }}"
+                    class="finish-question-btn">
+
+                    ← Cancel
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('add_questions', quiz_id=quiz.id) }}"
+                    class="finish-question-btn">
+
+                    📝 Questions
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="add-question-btn">
+
+                    💾 Save Changes
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+    </section>
+
+
+    <!-- QUESTIONS INFORMATION -->
+
+    <section class="existing-questions">
+
+
+        <div class="existing-question-title">
+
+            <h2>
+                📚 Quiz Questions
+            </h2>
+
+            <span>
+                {{ quiz.total_questions }} Questions
+            </span>
+
+        </div>
+
+
+        <div class="existing-question-card">
+
+            <div class="existing-question-content">
+
+                <h3>
+                    Want to edit individual questions?
+                </h3>
+
+                <p>
+                    Go to the Questions page to add or manage
+                    questions, answers and explanations.
+                </p>
+
+                <br>
+
+                <a
+                    href="{{ url_for('add_questions', quiz_id=quiz.id) }}"
+                    class="preview-quiz-btn">
+
+                    📝 Manage Questions
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer class="teacher-footer">
+
+    <strong>
+        🤖 QuizSphere AI
+    </strong>
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>

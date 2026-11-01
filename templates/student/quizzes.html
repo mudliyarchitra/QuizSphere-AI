@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Quizzes - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="student-navbar">
+
+    <div class="student-logo">
+        🤖 QuizSphere AI
+    </div>
+
+    <div class="student-nav-links">
+
+        <a href="{{ url_for('student_dashboard') }}">
+            🏠 Dashboard
+        </a>
+
+        <a href="{{ url_for('student_quizzes') }}"
+           class="active">
+            📝 Quizzes
+        </a>
+
+        <a href="{{ url_for('results_history') }}">
+            📊 Results
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            👤 Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}"
+           class="logout-link">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="student-dashboard">
+
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <section class="student-welcome">
+
+        <div>
+
+            <span class="welcome-label">
+                📚 QUIZ CENTER
+            </span>
+
+            <h1>
+                Available Quizzes
+            </h1>
+
+            <p>
+                Choose a quiz and test your knowledge.
+            </p>
+
+        </div>
+
+        <div class="welcome-robot">
+            📝
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         QUIZ LIST
+    ========================== -->
+
+    <section class="available-quizzes">
+
+        <div class="section-heading">
+
+            <h2>
+                📚 All Available Quizzes
+            </h2>
+
+            <a href="{{ url_for('student_dashboard') }}">
+                ← Dashboard
+            </a>
+
+        </div>
+
+
+        {% for quiz in quizzes %}
+
+        <div class="available-quiz-card">
+
+
+            <!-- LEFT SIDE -->
+
+            <div class="quiz-left">
+
+                <div class="quiz-icon">
+                    📝
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        {{ quiz.title }}
+                    </h3>
+
+
+                    <p>
+
+                        📚
+                        {{ quiz.subject or "General" }}
+
+                        &nbsp; • &nbsp;
+
+                        ❓
+                        {{ quiz.total_questions }}
+                        Questions
+
+                        &nbsp; • &nbsp;
+
+                        ⏱️
+                        {{ quiz.duration }}
+                        Minutes
+
+                    </p>
+
+
+                    {% if quiz.difficulty %}
+
+                    <p>
+
+                        🎯 Difficulty:
+                        <strong>
+                            {{ quiz.difficulty }}
+                        </strong>
+
+                    </p>
+
+                    {% endif %}
+
+
+                    {% if quiz.description %}
+
+                    <p>
+                        {{ quiz.description }}
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- START BUTTON -->
+
+            <a href="{{ url_for('start_quiz', quiz_id=quiz.id) }}"
+               class="start-btn">
+
+                Start Quiz →
+
+            </a>
+
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- =========================
+             NO QUIZZES
+        ========================== -->
+
+        <div class="available-quiz-card">
+
+            <div class="quiz-left">
+
+                <div class="quiz-icon">
+                    📚
+                </div>
+
+                <div>
+
+                    <h3>
+                        No quizzes available
+                    </h3>
+
+                    <p>
+                        There are currently no published quizzes.
+                    </p>
+
+                    <p>
+                        Please check again later.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+
+    </section>
+
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer class="student-footer">
+
+    <strong>
+        🤖 QuizSphere AI
+    </strong>
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>

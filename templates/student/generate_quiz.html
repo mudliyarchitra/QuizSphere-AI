@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate a Quiz - QuizSphere AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #10172f, #253b70);
+            color: white;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 30px auto;
+        }
+
+        .back {
+            display: inline-block;
+            color: #dbeafe;
+            text-decoration: none;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            color: #1e293b;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .heading h1 {
+            color: #243b80;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .heading p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 9px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+            background: #f8fafc;
+        }
+
+        input:focus, select:focus {
+            border-color: #4f46e5;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #059669, #0d9488);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .generate-btn:hover {
+            opacity: 0.9;
+        }
+
+        .info {
+            background: #ecfdf5;
+            border-left: 4px solid #059669;
+            padding: 15px;
+            border-radius: 7px;
+            margin-top: 25px;
+            color: #334155;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        @media(max-width: 600px) {
+            .card {
+                padding: 23px;
+            }
+
+            .heading h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{{ url_for('student_dashboard') }}" class="back">
+        ← Back to Student Dashboard
+    </a>
+
+    <div class="card">
+
+        <div class="heading">
+            <h1>📝 Generate a Quiz</h1>
+            <p>
+                Create a quiz and test your knowledge with
+                automatically generated questions.
+            </p>
+        </div>
+
+        <form method="POST"
+              action="{{ url_for('student_generate_ai_quiz') }}">
+
+            <input type="hidden" name="quiz_mode" value="test">
+
+            <div class="form-group">
+                <label for="topic">Enter Quiz Topic</label>
+                <input
+                    type="text"
+                    id="topic"
+                    name="topic"
+                    placeholder="Example: Python, DBMS, Computer Networks"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="difficulty">Select Difficulty</label>
+                <select id="difficulty" name="difficulty" required>
+                    <option value="">Choose Difficulty</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="num_questions">Number of Questions</label>
+                <select id="num_questions" name="num_questions" required>
+                    <option value="">Select Questions</option>
+                    <option value="5">5 Questions</option>
+                    <option value="10">10 Questions</option>
+                    <option value="15">15 Questions</option>
+                    <option value="20">20 Questions</option>
+                </select>
+            </div>
+
+            <button type="submit" class="generate-btn">
+                🚀 Generate Quiz & Start Test
+            </button>
+
+        </form>
+
+        <div class="info">
+            <strong>Test Instructions:</strong><br>
+            1. Select your topic and difficulty level.<br>
+            2. Choose how many questions you want.<br>
+            3. Generate your quiz and start the test.<br>
+            4. Select answers and submit your test.<br>
+            5. View your score and result after submission.
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

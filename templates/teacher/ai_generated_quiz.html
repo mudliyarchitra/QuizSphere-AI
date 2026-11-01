@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Generated Quiz - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}?v=999">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f4f7fb;
+            font-family: Arial, sans-serif;
+            color: #111827;
+        }
+
+        .ai-generated-container {
+            width: 95%;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        .ai-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .ai-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 34px;
+        }
+
+        .ai-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #374151;
+        }
+
+        /* ==============================
+           INFO
+        ============================== */
+
+        .ai-info {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .ai-info p {
+            margin: 8px;
+        }
+
+        .question-count {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* ==============================
+           QUESTION CARD
+        ============================== */
+
+        .question-card {
+            display: block !important;
+            width: 100% !important;
+
+            background: white;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            border-radius: 15px;
+
+            border: 1px solid #e5e7eb;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        /* ==============================
+           QUESTION
+        ============================== */
+
+        .question-text {
+            display: block !important;
+
+            width: 100%;
+
+            font-size: 20px;
+
+            line-height: 1.6;
+
+            margin-bottom: 20px;
+
+            color: #111827;
+
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .question-text strong {
+            color: #111827;
+        }
+
+        /* ==============================
+           OPTIONS
+        ============================== */
+
+        .option {
+            display: block !important;
+
+            width: 100%;
+
+            background: #f5f7fa;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 9px;
+
+            padding: 14px;
+
+            margin: 10px 0;
+
+            line-height: 1.5;
+
+            color: #222;
+
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .option strong {
+            color: #2563eb;
+            margin-right: 6px;
+        }
+
+        /* ==============================
+           CORRECT ANSWER
+        ============================== */
+
+        .correct-answer {
+            display: block !important;
+
+            margin-top: 20px;
+
+            padding: 14px;
+
+            background: #e8f8ee;
+
+            border-left: 5px solid #22c55e;
+
+            border-radius: 8px;
+
+            color: #166534;
+
+            font-size: 16px;
+        }
+
+        /* ==============================
+           EXPLANATION
+        ============================== */
+
+        .explanation {
+            display: block !important;
+
+            margin-top: 12px;
+
+            padding: 14px;
+
+            background: #f1f5ff;
+
+            border-left: 5px solid #2563eb;
+
+            border-radius: 8px;
+
+            line-height: 1.5;
+
+            color: #1e3a8a;
+
+            font-size: 15px;
+        }
+
+        /* ==============================
+           SAVE SECTION
+        ============================== */
+
+        .save-section {
+            text-align: center;
+
+            background: white;
+
+            padding: 35px;
+
+            margin-top: 35px;
+
+            border-radius: 15px;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+        }
+
+        .save-section h2 {
+            margin-top: 0;
+        }
+
+        .save-section p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .save-button {
+            padding: 14px 40px;
+
+            background: #2563eb;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 10px;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .save-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        /* ==============================
+           BACK LINK
+        ============================== */
+
+        .back-link {
+            display: inline-block;
+
+            margin-top: 20px;
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ==============================
+           EMPTY
+        ============================== */
+
+        .empty-message {
+            background: white;
+
+            padding: 40px;
+
+            text-align: center;
+
+            color: #dc2626;
+
+            border-radius: 15px;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        /* ==============================
+           MOBILE
+        ============================== */
+
+        @media (max-width: 700px) {
+
+            .ai-generated-container {
+                width: 100%;
+                padding: 15px;
+                margin: 15px auto;
+            }
+
+            .ai-header h1 {
+                font-size: 27px;
+            }
+
+            .ai-header h2 {
+                font-size: 20px;
+            }
+
+            .question-card {
+                padding: 18px;
+            }
+
+            .question-text {
+                font-size: 17px;
+            }
+
+            .option {
+                font-size: 15px;
+            }
+
+            .save-section {
+                padding: 25px 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="ai-generated-container">
+
+
+    <!-- =========================================
+         HEADER
+    ========================================== -->
+
+    <div class="ai-header">
+
+        <h1>
+            🤖 AI Generated Quiz
+        </h1>
+
+        <h2>
+            {{ topic }}
+        </h2>
+
+    </div>
+
+
+    <!-- =========================================
+         QUIZ INFORMATION
+    ========================================== -->
+
+    <div class="ai-info">
+
+        <p>
+
+            Difficulty:
+
+            <strong>
+                {{ difficulty }}
+            </strong>
+
+        </p>
+
+        <p class="question-count">
+
+            <strong>
+                {{ questions|length }}
+            </strong>
+
+            Questions Generated Successfully
+
+        </p>
+
+    </div>
+
+
+    <!-- =========================================
+         ALL QUESTIONS
+    ========================================== -->
+
+    {% if questions and questions|length > 0 %}
+
+
+        {% for q in questions %}
+
+
+        <div class="question-card">
+
+
+            <!-- QUESTION -->
+
+            <div class="question-text">
+
+                <strong>
+
+                    {{ loop.index }}.
+                    {{ q.get("question", "Question not available") }}
+
+                </strong>
+
+            </div>
+
+
+            <!-- OPTION A -->
+
+            <div class="option">
+
+                <strong>A.</strong>
+
+                {{ q.get("option_a", "") }}
+
+            </div>
+
+
+            <!-- OPTION B -->
+
+            <div class="option">
+
+                <strong>B.</strong>
+
+                {{ q.get("option_b", "") }}
+
+            </div>
+
+
+            <!-- OPTION C -->
+
+            <div class="option">
+
+                <strong>C.</strong>
+
+                {{ q.get("option_c", "") }}
+
+            </div>
+
+
+            <!-- OPTION D -->
+
+            <div class="option">
+
+                <strong>D.</strong>
+
+                {{ q.get("option_d", "") }}
+
+            </div>
+
+
+            <!-- CORRECT ANSWER -->
+
+            <div class="correct-answer">
+
+                <strong>
+                    Correct Answer:
+                </strong>
+
+                {{ q.get("correct_answer", "Not available") }}
+
+            </div>
+
+
+            <!-- EXPLANATION -->
+
+            <div class="explanation">
+
+                <strong>
+                    Explanation:
+                </strong>
+
+                {{ q.get("explanation", "No explanation available.") }}
+
+            </div>
+
+
+        </div>
+
+
+        {% endfor %}
+
+
+    {% else %}
+
+
+        <div class="empty-message">
+
+            <h3>
+                No questions were generated.
+            </h3>
+
+            <p>
+                Please go back and generate the quiz again.
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+
+    <!-- =========================================
+         SAVE QUIZ
+    ========================================== -->
+
+    {% if questions and questions|length > 0 %}
+
+
+    <div class="save-section">
+
+        <h2>
+            💾 Save This Quiz
+        </h2>
+
+        <p>
+
+            Review all generated questions before saving.
+
+            <br>
+
+            The quiz will be saved as a draft.
+
+        </p>
+
+
+        <form method="POST"
+              action="{{ url_for('save_ai_quiz') }}">
+
+
+            <input type="hidden"
+                   name="topic"
+                   value="{{ topic }}">
+
+
+            <input type="hidden"
+                   name="difficulty"
+                   value="{{ difficulty }}">
+
+
+            <input type="hidden"
+                   name="questions"
+                   value='{{ questions | tojson }}'>
+
+
+            <button type="submit"
+                    class="save-button">
+
+                💾 SAVE QUIZ
+
+            </button>
+
+
+        </form>
+
+
+        <a href="{{ url_for('ai_quiz') }}"
+           class="back-link">
+
+            ← Back to AI Quiz Center
+
+        </a>
+
+
+    </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+</body>
+
+</html>

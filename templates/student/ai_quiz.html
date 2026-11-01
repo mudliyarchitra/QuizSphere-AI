@@ -1,0 +1,608 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Quiz Center - QuizVerse AI</title>
+
+    <style>
+        :root {
+            --royal-purple: #7041C7;
+            --deep-purple: #3B206F;
+            --rose-pink: #E85D91;
+            --champagne-gold: #D9B66F;
+            --midnight: #17112B;
+            --soft-bg: #FAF7FC;
+            --white: #FFFFFF;
+            --muted: #82758F;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 10%, #F1E5FF 0, transparent 35%),
+                radial-gradient(circle at 90% 90%, #FFE7F0 0, transparent 35%),
+                var(--soft-bg);
+            color: var(--midnight);
+        }
+
+        .navbar {
+            background: linear-gradient(110deg, #17112B, #3B206F, #7041C7);
+            color: white;
+            padding: 19px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 25px rgba(59, 32, 111, 0.2);
+            border-bottom: 2px solid var(--champagne-gold);
+        }
+
+        .navbar h2 {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .navbar h2 span {
+            color: var(--champagne-gold);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.10);
+            border: 1px solid var(--champagne-gold);
+            padding: 11px 21px;
+            border-radius: 9px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .navbar a:hover {
+            background: var(--rose-pink);
+            border-color: var(--rose-pink);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 48px auto;
+            padding: 0 18px;
+        }
+
+        .form-card {
+            background: rgba(255,255,255,0.96);
+            padding: 38px;
+            border-radius: 22px;
+            border: 1px solid #E8D9F5;
+            box-shadow: 0 15px 45px rgba(59, 32, 111, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(
+                90deg,
+                var(--royal-purple),
+                var(--rose-pink),
+                var(--champagne-gold)
+            );
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 34px;
+        }
+
+        .heading .tag {
+            display: inline-block;
+            background: #F1E9FC;
+            color: var(--royal-purple);
+            padding: 8px 17px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border: 1px solid #E1D0F5;
+        }
+
+        .heading h1 {
+            font-size: 31px;
+            margin-bottom: 12px;
+            color: var(--deep-purple);
+            font-weight: 800;
+        }
+
+        .heading h1 span {
+            color: var(--rose-pink);
+        }
+
+        .heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .gold-line {
+            width: 65px;
+            height: 3px;
+            background: var(--champagne-gold);
+            margin: 17px auto 0;
+            border-radius: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 23px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: var(--deep-purple);
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #DED1EB;
+            border-radius: 11px;
+            font-size: 15px;
+            outline: none;
+            background: #FFFDFF;
+            color: var(--midnight);
+            transition: 0.3s;
+        }
+
+        input:hover,
+        select:hover {
+            border-color: var(--rose-pink);
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--royal-purple);
+            box-shadow: 0 0 0 4px rgba(112, 65, 199, 0.12);
+            background: white;
+        }
+
+        .upload-box {
+            border: 2px dashed #B99BDD;
+            background: #FAF7FF;
+            padding: 28px 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .upload-box:hover {
+            border-color: var(--rose-pink);
+            background: #FFF7FB;
+        }
+
+        .upload-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .upload-box p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .upload-box input[type="file"] {
+            padding: 11px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .file-name {
+            margin-top: 12px;
+            color: var(--royal-purple);
+            font-size: 13px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .upload-note {
+            margin-top: 10px;
+            color: #91849D;
+            font-size: 12px;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--champagne-gold);
+            border-radius: 12px;
+            background: linear-gradient(
+                110deg,
+                var(--royal-purple),
+                var(--deep-purple),
+                var(--rose-pink)
+            );
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 9px;
+            box-shadow: 0 8px 20px rgba(112, 65, 199, 0.22);
+            transition: 0.3s;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(112, 65, 199, 0.3);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 22px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .note span {
+            color: var(--rose-pink);
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px 15px 25px;
+            color: #91849D;
+            font-size: 12px;
+        }
+
+        .footer span {
+            color: var(--royal-purple);
+            font-weight: bold;
+        }
+
+        @media(max-width: 600px) {
+            .navbar {
+                padding: 16px 5%;
+            }
+
+            .navbar h2 {
+                font-size: 20px;
+            }
+
+            .container {
+                margin: 30px auto;
+            }
+
+            .form-card {
+                padding: 25px 20px;
+            }
+
+            .heading h1 {
+                font-size: 25px;
+            }
+
+            .navbar a {
+                padding: 9px 13px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <h2>QuizVerse <span>AI</span></h2>
+
+    <a href="{{ url_for('student_dashboard') }}">
+        Dashboard
+    </a>
+</nav>
+
+<div class="container">
+
+    <div class="form-card">
+
+        <div class="heading">
+
+            <div class="tag">
+                ✦ {{ mode|default('topic')|upper }} AI EXPERIENCE
+            </div>
+
+            {% if mode == 'topic' %}
+
+                <h1>AI Quiz <span>Generator</span></h1>
+                <p>Enter a topic and let AI create your quiz instantly.</p>
+
+            {% elif mode == 'smart' %}
+
+                <h1>Smart Quiz <span>Creation</span></h1>
+                <p>Customize your quiz with your preferred settings.</p>
+
+            {% else %}
+
+                <h1>Upload Your <span>Document</span></h1>
+                <p>Generate an intelligent quiz directly from your study material.</p>
+
+            {% endif %}
+
+            <div class="gold-line"></div>
+
+        </div>
+
+        <form
+            action="{{ url_for('student_generate_ai_quiz') }}"
+            method="POST"
+            enctype="multipart/form-data"
+            id="quizForm">
+
+            <input
+                type="hidden"
+                name="creation_mode"
+                value="{{ mode|default('topic') }}">
+
+            {% if mode == 'document' %}
+
+                <div class="form-group">
+
+                    <label for="document">
+                        1. Upload Study Document
+                    </label>
+
+                    <div class="upload-box">
+
+                        <div class="upload-icon">📚</div>
+
+                        <p>
+                            Select your study material.
+                            <br>
+                            Supported formats: PDF, DOCX and TXT
+                        </p>
+
+                        <input
+                            type="file"
+                            id="document"
+                            name="document"
+                            accept=".pdf,.docx,.txt"
+                            required>
+
+                        <div class="file-name" id="fileName">
+                            No document selected
+                        </div>
+
+                        <div class="upload-note">
+                            Maximum file size: 8 MB
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <div class="form-group">
+
+                    <label for="topic">
+                        1. Enter Quiz Topic
+                    </label>
+
+                    <input
+                        type="text"
+                        id="topic"
+                        name="topic"
+                        placeholder="Example: Python Programming, DBMS, Statistics"
+                        required>
+
+                </div>
+
+            {% endif %}
+
+            <div class="form-group">
+
+                <label for="difficulty">
+                    2. Select Difficulty
+                </label>
+
+                <select
+                    id="difficulty"
+                    name="difficulty"
+                    required>
+
+                    <option value="Easy">Easy</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="Hard">Hard</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="number">
+                    3. Select Number of Questions
+                </label>
+
+                <select
+                    id="number"
+                    name="number"
+                    required>
+
+                    <option value="5">5 Questions</option>
+                    <option value="10" selected>10 Questions</option>
+                    <option value="15">15 Questions</option>
+                    <option value="20">20 Questions</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="question_types">
+                    4. Select Question Type
+                </label>
+
+                <select
+                    id="question_types"
+                    name="question_types"
+                    required>
+
+                    <option value="MCQ">Multiple Choice Questions</option>
+                    <option value="True/False">True / False</option>
+                    <option value="Fill in the Blanks">Fill in the Blanks</option>
+                    <option value="Mixed" selected>Mixed Questions</option>
+
+                </select>
+
+            </div>
+
+            {% if mode == 'smart' or mode == 'document' %}
+
+                <div class="form-group">
+
+                    <label for="quiz_mode">
+                        5. Select Quiz Mode
+                    </label>
+
+                    <select
+                        id="quiz_mode"
+                        name="quiz_mode"
+                        required>
+
+                        <option value="practice">Practice Mode</option>
+                        <option value="test" selected>Test Mode</option>
+
+                    </select>
+
+                </div>
+
+            {% else %}
+
+                <input
+                    type="hidden"
+                    name="quiz_mode"
+                    value="practice">
+
+            {% endif %}
+
+            <button
+                type="submit"
+                class="generate-btn"
+                id="generateBtn">
+
+                ✦ Generate AI Quiz
+
+            </button>
+
+        </form>
+
+        <p class="note">
+            Your quiz will be generated using AI.
+            <br>
+            <span>Powered by QuizVerse AI</span>
+        </p>
+
+    </div>
+
+</div>
+
+<div class="footer">
+    © 2026 <span>QuizVerse AI</span> |
+    Premium AI Learning Platform
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const quizForm = document.getElementById("quizForm");
+    const generateBtn = document.getElementById("generateBtn");
+    const documentInput = document.getElementById("document");
+    const fileName = document.getElementById("fileName");
+
+    if (documentInput) {
+
+        documentInput.addEventListener("change", function () {
+
+            if (!this.files.length) {
+                fileName.textContent = "No document selected";
+                return;
+            }
+
+            const file = this.files[0];
+            const extension = file.name.split(".").pop().toLowerCase();
+
+            const allowedExtensions = ["pdf", "docx", "txt"];
+
+            if (!allowedExtensions.includes(extension)) {
+                alert("Please upload only PDF, DOCX or TXT files.");
+                this.value = "";
+                fileName.textContent = "No document selected";
+                return;
+            }
+
+            if (file.size > 8 * 1024 * 1024) {
+                alert("File size must be below 8 MB.");
+                this.value = "";
+                fileName.textContent = "No document selected";
+                return;
+            }
+
+            fileName.textContent = "Selected: " + file.name;
+
+        });
+
+    }
+
+    quizForm.addEventListener("submit", function (event) {
+
+        if (documentInput && !documentInput.files.length) {
+            event.preventDefault();
+            alert("Please upload your study document first.");
+            return;
+        }
+
+        const topicInput = document.getElementById("topic");
+
+        if (topicInput && !topicInput.value.trim()) {
+            event.preventDefault();
+            alert("Please enter a quiz topic.");
+            return;
+        }
+
+        generateBtn.disabled = true;
+        generateBtn.textContent = "⏳ Generating Your Quiz...";
+
+    });
+
+});
+</script>
+
+</body>
+</html>

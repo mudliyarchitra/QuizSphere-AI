@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Teacher Dashboard - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TEACHER NAVBAR
+===================================================== -->
+
+<nav class="teacher-navbar">
+
+    <div class="teacher-logo">
+        🤖 QuizSphere AI
+    </div>
+
+
+    <div class="teacher-nav-links">
+
+        <a href="{{ url_for('teacher_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            Profile
+        </a>
+
+        <a href="{{ url_for('create_quiz') }}">
+            Create Quiz
+        </a>
+
+        <a href="{{ url_for('my_quizzes') }}">
+            My Quizzes
+        </a>
+
+        <a href="#">
+            Results
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     MAIN DASHBOARD
+===================================================== -->
+
+<main class="teacher-dashboard">
+
+
+    <!-- =================================================
+         WELCOME
+    ================================================== -->
+
+    <section class="teacher-welcome">
+
+        <div>
+
+            <span class="teacher-welcome-small">
+                ✨ TEACHER CONTROL CENTER
+            </span>
+
+            <h1>
+                Welcome back,
+                {{ session.get("user_name") }} 👋
+            </h1>
+
+            <p>
+                Create quizzes, manage students and
+                monitor their performance from one place.
+            </p>
+
+        </div>
+
+
+        <div class="teacher-robot">
+            👨‍🏫
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         STATISTICS
+    ================================================== -->
+
+    <section class="teacher-stats">
+
+
+        <div class="teacher-stat-card">
+
+            <div class="teacher-stat-icon">
+                📝
+            </div>
+
+            <div>
+
+                <span>
+                    My Quizzes
+                </span>
+
+                <h2>
+                    {{ total_quizzes }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="teacher-stat-card">
+
+            <div class="teacher-stat-icon">
+                👨‍🎓
+            </div>
+
+            <div>
+
+                <span>
+                    Students
+                </span>
+
+                <h2>
+                    {{ total_students }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="teacher-stat-card">
+
+            <div class="teacher-stat-icon">
+                📊
+            </div>
+
+            <div>
+
+                <span>
+                    Total Attempts
+                </span>
+
+                <h2>
+                    {{ total_attempts }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="teacher-stat-card">
+
+            <div class="teacher-stat-icon">
+                🎯
+            </div>
+
+            <div>
+
+                <span>
+                    Average Score
+                </span>
+
+                <h2>
+                    {{ avg_score }}%
+                </h2>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         QUICK ACTIONS
+    ================================================== -->
+
+    <section class="teacher-create-section">
+
+        <div class="teacher-section-title">
+
+            <h2>
+                🚀 Quick Actions
+            </h2>
+
+            <p>
+                Choose how you want to create your quiz
+            </p>
+
+        </div>
+
+
+        <div class="teacher-action-grid">
+
+
+            <!-- CARD 1 -->
+
+            <div class="teacher-action-card">
+
+                <div class="teacher-action-icon">
+                    📄
+                </div>
+
+                <h3>
+                    Upload PDF
+                </h3>
+
+                <p>
+                    Upload study material and generate quiz later
+                </p>
+
+                <a href="{{ url_for('ai_quiz') }}">
+                     Open →
+                </a>
+            </div>
+
+
+
+            <!-- CARD 2 -->
+
+            <div class="teacher-action-card ai-card">
+
+                <div class="teacher-action-icon">
+                    🤖
+                </div>
+
+                <h3>
+                    AI Generator
+                </h3>
+
+                <p>
+                    Automatically generate MCQs using AI
+                </p>
+                <a href="{{ url_for('ai_quiz') }}">
+                     Generate →
+                 </a>    
+
+            </div>
+
+
+
+            <!-- CARD 3 -->
+
+            <div class="teacher-action-card">
+
+                <div class="teacher-action-icon">
+                    ✏️
+                </div>
+
+                <h3>
+                    Create Quiz
+                </h3>
+
+                <p>
+                    Manually create your own quiz questions
+                </p>
+
+                <a href="{{ url_for('create_quiz') }}">
+                    Start →
+                </a>
+
+            </div>
+
+
+
+            <!-- CARD 4 -->
+
+            <div class="teacher-action-card">
+
+                <div class="teacher-action-icon">
+                    📂
+                </div>
+
+                <h3>
+                    Manage Quizzes
+                </h3>
+
+                <p>
+                    Edit, delete and control all your quizzes
+                </p>
+
+                <a href="{{ url_for('my_quizzes') }}">
+                    Manage →
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         MY QUIZZES
+    ================================================== -->
+
+    <section class="teacher-quizzes">
+
+
+        <div class="teacher-section-heading">
+
+            <div>
+
+                <h2>
+                    📚 My Quizzes
+                </h2>
+
+                <p>
+                    Manage the quizzes created by you.
+                </p>
+
+            </div>
+
+
+            <a href="{{ url_for('my_quizzes') }}">
+                View All →
+            </a>
+
+        </div>
+
+
+
+        <!-- =================================================
+             REAL QUIZZES FROM DATABASE
+        ================================================== -->
+
+        {% if quizzes %}
+
+
+            {% for quiz in quizzes %}
+
+
+            <div class="teacher-quiz-row">
+
+
+                <!-- QUIZ INFORMATION -->
+
+                <div class="teacher-quiz-info">
+
+
+                    <div class="teacher-quiz-icon">
+
+                        {% if quiz.subject %}
+                            📚
+                        {% else %}
+                            📝
+                        {% endif %}
+
+                    </div>
+
+
+                    <div>
+
+                        <h3>
+                            {{ quiz.title }}
+                        </h3>
+
+
+                        <p>
+
+                            {{ quiz.total_questions or 0 }}
+                            Questions
+
+                            {% if quiz.duration %}
+                                • {{ quiz.duration }} Minutes
+                            {% endif %}
+
+                            {% if quiz.subject %}
+                                • {{ quiz.subject }}
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     QUIZ STATUS
+                ================================================== -->
+
+                {% if quiz.published %}
+
+                    <span class="quiz-published">
+                        🟢 Published
+                    </span>
+
+                {% else %}
+
+                    <span class="quiz-draft">
+                        🟡 Draft
+                    </span>
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                     QUIZ ACTIONS
+                ================================================== -->
+
+                <div class="quiz-actions">
+
+
+                    <!-- EDIT QUIZ -->
+
+                    <a
+                        href="{{ url_for('edit_quiz', quiz_id=quiz.id) }}"
+                        class="quiz-edit-btn">
+
+                        ✏️ Edit
+
+                    </a>
+
+
+
+                    <!-- MANAGE QUESTIONS -->
+
+                    <a
+                        href="{{ url_for('add_questions', quiz_id=quiz.id) }}"
+                        class="quiz-question-btn">
+
+                        📝 Manage Questions
+
+                    </a>
+
+
+
+                    <!-- PREVIEW -->
+
+                    <a
+                        href="{{ url_for('preview_quiz', quiz_id=quiz.id) }}"
+                        class="quiz-preview-btn">
+
+                        👁️ Preview
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+            {% endfor %}
+
+
+
+        {% else %}
+
+
+            <!-- NO QUIZZES -->
+
+            <div class="teacher-quiz-row">
+
+
+                <div class="teacher-quiz-info">
+
+                    <div class="teacher-quiz-icon">
+                        📚
+                    </div>
+
+
+                    <div>
+
+                        <h3>
+                            No Quizzes Yet
+                        </h3>
+
+                        <p>
+                            Create your first quiz to see it here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a href="{{ url_for('create_quiz') }}">
+                    ➕ Create Quiz
+                </a>
+
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         STUDENT PERFORMANCE
+    ================================================== -->
+
+    <section class="teacher-performance">
+
+
+        <div class="teacher-section-heading">
+
+            <div>
+
+                <h2>
+                    👨‍🎓 Student Performance
+                </h2>
+
+                <p>
+                    See students who attempted your quizzes.
+                </p>
+
+            </div>
+
+
+            <a href="#">
+                View All →
+            </a>
+
+        </div>
+
+
+
+        <!-- TABLE -->
+
+        <div class="performance-table-wrapper">
+
+
+            <table class="performance-table">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Quiz
+                        </th>
+
+                        <th>
+                            Marks
+                        </th>
+
+                        <th>
+                            Percentage
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    {% if results %}
+
+
+                        {% for result in results %}
+
+
+                        <tr>
+
+
+                            <td>
+                                👤 {{ result.student.name }}
+                            </td>
+
+
+                            <td>
+                                {{ result.quiz.title }}
+                            </td>
+
+
+                            <td>
+                                {{ result.score }} /
+                                {{ result.total }}
+                            </td>
+
+
+                            <td>
+                                {{ result.percentage }}%
+                            </td>
+
+
+                            <td>
+
+                                {% if result.percentage >= 50 %}
+
+                                    <span class="passed">
+                                        Passed
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="average">
+                                        Needs Improvement
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    {% else %}
+
+
+                        <tr>
+
+                            <td colspan="5">
+
+                                No student attempts yet.
+
+                            </td>
+
+                        </tr>
+
+
+                    {% endif %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         PERFORMANCE OVERVIEW
+    ================================================== -->
+
+    <section class="teacher-overview">
+
+
+        <h2>
+            📈 Performance Overview
+        </h2>
+
+
+
+        <div class="overview-grid">
+
+
+            <div>
+
+                <span>
+                    Average Score
+                </span>
+
+                <strong>
+                    {{ avg_score }}%
+                </strong>
+
+            </div>
+
+
+
+            <div>
+
+                <span>
+                    Highest Score
+                </span>
+
+                <strong>
+                    {{ highest }}%
+                </strong>
+
+            </div>
+
+
+
+            <div>
+
+                <span>
+                    Lowest Score
+                </span>
+
+                <strong>
+                    {{ lowest }}%
+                </strong>
+
+            </div>
+
+
+
+            <div>
+
+                <span>
+                    Total Attempts
+                </span>
+
+                <strong>
+                    {{ total_attempts }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="teacher-footer">
+
+    🤖 QuizSphere AI
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>

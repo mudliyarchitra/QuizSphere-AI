@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Add Questions - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="teacher-navbar">
+
+    <div class="teacher-logo">
+        🤖 QuizSphere AI
+    </div>
+
+
+    <div class="teacher-nav-links">
+
+        <a href="{{ url_for('teacher_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('my_quizzes') }}">
+            My Quizzes
+        </a>
+
+        <a href="{{ url_for('create_quiz') }}">
+            Create Quiz
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     MAIN PAGE
+===================================================== -->
+
+<main class="add-question-page">
+
+
+    <!-- =================================================
+         HEADER
+    ================================================== -->
+
+    <section class="add-question-header">
+
+        <div class="add-question-icon">
+            ❓
+        </div>
+
+        <div>
+
+            <h1>
+                Add Questions
+            </h1>
+
+            <p>
+                Add MCQ questions, correct answers and explanations.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         QUIZ INFORMATION
+    ================================================== -->
+
+    <section class="question-quiz-info">
+
+        <div>
+
+            <span>
+                QUIZ
+            </span>
+
+            <h2>
+                {{ quiz.title }}
+            </h2>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                SUBJECT
+            </span>
+
+            <strong>
+                {{ quiz.subject }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                DURATION
+            </span>
+
+            <strong>
+                {{ quiz.duration }} Minutes
+            </strong>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         ADD QUESTION CARD
+    ================================================== -->
+
+    <section class="add-question-card">
+
+
+        <div class="question-card-title">
+
+            <div class="question-number">
+                {{ questions|length + 1 }}
+            </div>
+
+            <div>
+
+                <h2>
+                    Add New Question
+                </h2>
+
+                <p>
+                    Enter the question and four answer options.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             QUESTION FORM
+        ================================================== -->
+
+        <form
+            action="{{ url_for('add_questions', quiz_id=quiz.id) }}"
+            method="POST">
+
+
+            <!-- QUESTION -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Question
+                </label>
+
+                <textarea
+                    name="question"
+                    placeholder="Enter your question here..."
+                    required></textarea>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 OPTIONS
+            ================================================== -->
+
+            <div class="options-title">
+
+                <h3>
+                    📝 Answer Options
+                </h3>
+
+                <p>
+                    Enter four possible answers.
+                </p>
+
+            </div>
+
+
+
+            <!-- OPTION A -->
+
+            <div class="option-group">
+
+                <label>
+                    Option A
+                </label>
+
+                <input
+                    type="text"
+                    name="option_a"
+                    placeholder="Enter option A"
+                    required>
+
+            </div>
+
+
+
+            <!-- OPTION B -->
+
+            <div class="option-group">
+
+                <label>
+                    Option B
+                </label>
+
+                <input
+                    type="text"
+                    name="option_b"
+                    placeholder="Enter option B"
+                    required>
+
+            </div>
+
+
+
+            <!-- OPTION C -->
+
+            <div class="option-group">
+
+                <label>
+                    Option C
+                </label>
+
+                <input
+                    type="text"
+                    name="option_c"
+                    placeholder="Enter option C"
+                    required>
+
+            </div>
+
+
+
+            <!-- OPTION D -->
+
+            <div class="option-group">
+
+                <label>
+                    Option D
+                </label>
+
+                <input
+                    type="text"
+                    name="option_d"
+                    placeholder="Enter option D"
+                    required>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CORRECT ANSWER
+            ================================================== -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Correct Answer
+                </label>
+
+                <select
+                    name="correct_answer"
+                    required>
+
+                    <option value="">
+                        Select correct answer
+                    </option>
+
+                    <option value="A">
+                        A
+                    </option>
+
+                    <option value="B">
+                        B
+                    </option>
+
+                    <option value="C">
+                        C
+                    </option>
+
+                    <option value="D">
+                        D
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ANSWER EXPLANATION
+            ================================================== -->
+
+            <div class="question-form-group">
+
+                <label>
+                    💡 Answer Explanation
+                </label>
+
+                <textarea
+                    name="explanation"
+                    placeholder="Explain why this answer is correct..."
+                    rows="5"></textarea>
+
+                <small>
+                    This explanation can be shown to students after they complete the quiz.
+                </small>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MARKS
+            ================================================== -->
+
+            <div class="question-form-group">
+
+                <label>
+                    Marks
+                </label>
+
+                <input
+                    type="number"
+                    name="marks"
+                    value="1"
+                    min="1"
+                    required>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 BUTTONS
+            ================================================== -->
+
+            <div class="add-question-actions">
+
+                <a
+                    href="{{ url_for('my_quizzes') }}"
+                    class="finish-question-btn">
+
+                    ← Back to My Quizzes
+
+                </a>
+
+
+                <button
+                 type="submit"
+                class="add-question-btn">
+
+                💾 Save & Next Question
+
+                </button>
+            </div>
+
+
+        </form>
+
+    </section>
+
+
+
+    <!-- =================================================
+         EXISTING QUESTIONS
+    ================================================== -->
+
+    {% if questions %}
+
+    <section class="existing-questions">
+
+
+        <div class="existing-question-title">
+
+            <h2>
+                📚 Added Questions
+            </h2>
+
+            <span>
+                {{ questions|length }} Questions
+            </span>
+
+        </div>
+
+
+
+        {% for question in questions %}
+
+        <div class="existing-question-card">
+
+
+            <div class="existing-question-number">
+
+                {{ loop.index }}
+
+            </div>
+
+
+            <div class="existing-question-content">
+
+                <h3>
+
+                    {{ question.question }}
+
+                </h3>
+
+
+                <div class="question-options">
+
+                    <span>
+                        A. {{ question.option_a }}
+                    </span>
+
+                    <span>
+                        B. {{ question.option_b }}
+                    </span>
+
+                    <span>
+                        C. {{ question.option_c }}
+                    </span>
+
+                    <span>
+                        D. {{ question.option_d }}
+                    </span>
+
+                </div>
+
+
+                <div class="correct-answer">
+
+                    ✅ Correct Answer:
+                    {{ question.correct_answer }}
+
+                </div>
+
+
+                {% if question.explanation %}
+
+                <div class="answer-explanation">
+
+                    💡 <strong>Explanation:</strong>
+
+                    {{ question.explanation }}
+
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+
+    </section>
+
+    {% endif %}
+
+
+
+    <!-- =================================================
+         FINISH QUIZ
+    ================================================== -->
+
+    {% if questions %}
+
+    <div class="finish-quiz-section">
+
+        <a
+            href="{{ url_for('preview_quiz', quiz_id=quiz.id) }}"
+            class="preview-quiz-btn">
+
+            👁️ Preview Quiz
+
+        </a>
+
+
+        <form
+            action="{{ url_for('publish_quiz', quiz_id=quiz.id) }}"
+            method="POST">
+
+            <button
+                type="submit"
+                class="publish-quiz-btn"
+                onclick="return confirm('Are you sure you want to publish this quiz?');">
+
+                🚀 Publish Quiz
+
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endif %}
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="teacher-footer">
+
+    <strong>
+        🤖 QuizSphere AI
+    </strong>
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>
+

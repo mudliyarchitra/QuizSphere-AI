@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Saved Questions - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            margin: 0;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #252b45;
+        }
+
+        .back-btn {
+            background: #6750d8;
+            color: white;
+            padding: 11px 18px;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        .back-btn:hover {
+            background: #503bb5;
+        }
+
+        .question-card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+        }
+
+        .topic {
+            color: #6750d8;
+            font-weight: bold;
+        }
+
+        .option {
+            background: #f4f5fa;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+        }
+
+        .answer {
+            color: #16834b;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .explanation {
+            background: #eaf7ef;
+            padding: 12px;
+            border-radius: 7px;
+            margin-top: 10px;
+        }
+
+        .empty {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .question-card {
+                padding: 15px;
+            }
+
+            .header {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+            <h1>My Saved Questions</h1>
+            <p>Revise your AI-generated questions anytime.</p>
+        </div>
+
+        <a href="{{ url_for('student_dashboard') }}"
+           class="back-btn">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+    <!-- SAVED QUESTIONS -->
+
+    {% if saved_questions %}
+
+        {% for saved in saved_questions %}
+
+            <div class="question-card">
+
+                <h2>{{ saved.topic }}</h2>
+
+                <p class="topic">
+                    Difficulty: {{ saved.difficulty }}
+                </p>
+
+                {% set questions = saved.questions_list %}
+
+                {% if questions %}
+
+                    {% for q in questions %}
+
+                        <hr>
+
+                        <h3>
+                            Q{{ loop.index }}. {{ q.question }}
+                        </h3>
+
+                        <div class="option">
+                            A. {{ q.option_a }}
+                        </div>
+
+                        <div class="option">
+                            B. {{ q.option_b }}
+                        </div>
+
+                        <div class="option">
+                            C. {{ q.option_c }}
+                        </div>
+
+                        <div class="option">
+                            D. {{ q.option_d }}
+                        </div>
+
+                        <p class="answer">
+                            Correct Answer: {{ q.correct_answer }}
+                        </p>
+
+                        {% if q.explanation %}
+
+                            <div class="explanation">
+                                <strong>Explanation:</strong>
+                                {{ q.explanation }}
+                            </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>No questions available in this saved record.</p>
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty">
+
+            <h2>No Saved Questions Yet</h2>
+
+            <p>
+                Generate an AI quiz and save its questions
+                to see them here.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

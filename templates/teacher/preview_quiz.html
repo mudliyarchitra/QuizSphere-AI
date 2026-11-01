@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Preview Quiz - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav class="teacher-navbar">
+
+    <div class="teacher-logo">
+        🤖 QuizSphere AI
+    </div>
+
+    <div class="teacher-nav-links">
+        <a href="{{ url_for('teacher_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('my_quizzes') }}">My Quizzes</a>
+        <a href="{{ url_for('create_quiz') }}">Create Quiz</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+</nav>
+
+
+<main class="add-question-page">
+
+    <section class="add-question-header">
+
+        <div class="add-question-icon">
+            👁️
+        </div>
+
+        <div>
+            <h1>Preview Quiz</h1>
+            <p>Check your quiz before publishing.</p>
+        </div>
+
+    </section>
+
+
+    <section class="question-quiz-info">
+
+        <div>
+            <span>QUIZ</span>
+            <h2>{{ quiz.title }}</h2>
+        </div>
+
+        <div>
+            <span>SUBJECT</span>
+            <strong>{{ quiz.subject }}</strong>
+        </div>
+
+        <div>
+            <span>DURATION</span>
+            <strong>{{ quiz.duration }} Minutes</strong>
+        </div>
+
+    </section>
+
+
+    <section class="existing-questions">
+
+        <div class="existing-question-title">
+            <h2>📚 Questions</h2>
+
+            <span>
+                {{ quiz.total_questions }} Questions
+            </span>
+        </div>
+
+
+        {% for question in quiz.questions %}
+
+        <div class="existing-question-card">
+
+            <div class="existing-question-number">
+                {{ loop.index }}
+            </div>
+
+            <div class="existing-question-content">
+
+                <h3>
+                    {{ question.question }}
+                </h3>
+
+                <div class="question-options">
+
+                    <span>
+                        A. {{ question.option_a }}
+                    </span>
+
+                    <span>
+                        B. {{ question.option_b }}
+                    </span>
+
+                    <span>
+                        C. {{ question.option_c }}
+                    </span>
+
+                    <span>
+                        D. {{ question.option_d }}
+                    </span>
+
+                </div>
+
+
+                <div class="correct-answer">
+
+                    ✅ Correct Answer:
+                    {{ question.correct_answer }}
+
+                </div>
+
+
+                {% if question.explanation %}
+
+                <div class="answer-explanation">
+
+                    💡 <strong>Explanation:</strong>
+
+                    {{ question.explanation }}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="existing-question-card">
+
+            <div class="existing-question-content">
+
+                <h3>No questions added yet.</h3>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </section>
+
+
+    <div class="finish-quiz-section">
+
+        <a
+            href="{{ url_for('add_questions', quiz_id=quiz.id) }}"
+            class="preview-quiz-btn">
+
+            ← Back to Questions
+
+        </a>
+
+
+        <a
+            href="{{ url_for('edit_quiz', quiz_id=quiz.id) }}"
+            class="preview-quiz-btn">
+
+            ✏️ Edit Quiz
+
+        </a>
+
+    </div>
+
+</main>
+
+
+<footer class="teacher-footer">
+
+    <strong>
+        🤖 QuizSphere AI
+    </strong>
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+</body>
+</html>

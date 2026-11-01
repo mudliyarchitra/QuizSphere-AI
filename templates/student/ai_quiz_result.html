@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Quiz Test Result - QuizVerse AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f3ff;
+            color: #241b3b;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #251044;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 17px;
+            border: 1px solid #a78bfa;
+            border-radius: 9px;
+            font-size: 14px;
+        }
+
+        .container {
+            width: min(1000px, 92%);
+            margin: 35px auto;
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, #3b176d, #6d28d9);
+            color: white;
+            padding: 35px 25px;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 12px 30px rgba(65, 30, 120, 0.18);
+        }
+
+        .result-header h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .result-header p {
+            color: #e9ddff;
+            margin-top: 7px;
+        }
+
+        .score-card {
+            background: white;
+            margin-top: 22px;
+            padding: 28px;
+            border-radius: 18px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            box-shadow: 0 6px 22px rgba(45, 25, 80, 0.07);
+        }
+
+        .score-item {
+            text-align: center;
+            padding: 18px 10px;
+            background: #f7f3ff;
+            border-radius: 13px;
+        }
+
+        .score-item h2 {
+            color: #6d28d9;
+            font-size: 30px;
+            margin-bottom: 6px;
+        }
+
+        .score-item p {
+            color: #6b6280;
+            font-size: 14px;
+        }
+
+        .progress-section {
+            background: white;
+            margin-top: 20px;
+            padding: 22px;
+            border-radius: 15px;
+            box-shadow: 0 6px 22px rgba(45, 25, 80, 0.06);
+        }
+
+        .progress-title {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .progress-track {
+            height: 13px;
+            background: #e9e2f5;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7c3aed, #a78bfa);
+    border-radius: 20px;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+        .section-title {
+            margin: 30px 0 16px;
+            font-size: 23px;
+            color: #32165c;
+        }
+
+        .question-card {
+            background: white;
+            padding: 23px;
+            margin-bottom: 17px;
+            border-radius: 15px;
+            border-left: 5px solid #8b5cf6;
+            box-shadow: 0 5px 18px rgba(45, 25, 80, 0.06);
+        }
+
+        .question-card.is-correct {
+            border-left-color: #16a34a;
+        }
+
+        .question-card.is-incorrect {
+            border-left-color: #dc2626;
+        }
+
+        .question-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .question-number {
+            color: #6d28d9;
+            font-weight: 800;
+        }
+
+        .status {
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .correct {
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .incorrect {
+            color: #991b1b;
+            background: #fee2e2;
+        }
+
+        .question-text {
+            font-size: 17px;
+            font-weight: 650;
+            line-height: 1.6;
+            margin-bottom: 17px;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: #ede9fe;
+            color: #5b21b6;
+            padding: 5px 10px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 13px;
+        }
+
+        .answer-box {
+            display: grid;
+            gap: 10px;
+        }
+
+        .answer-row {
+            padding: 12px 15px;
+            background: #f8f6fc;
+            border-radius: 9px;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .answer-row strong {
+            color: #4c277e;
+        }
+
+        .explanation {
+            margin-top: 13px;
+            padding: 14px;
+            background: #f3edff;
+            border-radius: 10px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .explanation strong {
+            color: #5b21b6;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 13px;
+            margin: 30px 0 45px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.2s;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #6d28d9;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #54228f;
+            border: 1px solid #c4b5fd;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.92;
+        }
+
+        .empty {
+            background: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 14px;
+        }
+
+        @media (max-width: 650px) {
+            .score-card {
+                grid-template-columns: 1fr;
+            }
+
+            .result-header h1 {
+                font-size: 24px;
+            }
+
+            .navbar {
+                padding: 15px 4%;
+            }
+
+            .container {
+                margin-top: 22px;
+            }
+
+            .question-card {
+                padding: 17px;
+            }
+        }
+
+        @media print {
+            .navbar,
+            .actions {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .container {
+                width: 100%;
+                margin: 0;
+            }
+
+            .question-card,
+            .score-card,
+            .result-header,
+            .progress-section {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a href="{{ url_for('student_dashboard') }}" class="brand">
+        QuizVerse AI
+    </a>
+
+    <a href="{{ url_for('student_dashboard') }}" class="nav-link">
+        Dashboard
+    </a>
+</nav>
+
+<main class="container">
+
+    <!-- RESULT HEADER -->
+    <section class="result-header">
+        <h1>🎉 Test Completed!</h1>
+        <p>Your AI-generated quiz result is ready.</p>
+
+        <p>
+            <strong>Topic:</strong>
+            {{ topic }}
+        </p>
+
+        <p>
+            <strong>Difficulty:</strong>
+            {{ difficulty }}
+        </p>
+    </section>
+
+    <!-- SCORE SUMMARY -->
+    <section class="score-card">
+
+        <div class="score-item">
+            <h2>{{ score }}</h2>
+            <p>Correct Answers</p>
+        </div>
+
+        <div class="score-item">
+            <h2>{{ total }}</h2>
+            <p>Total Questions</p>
+        </div>
+
+        <div class="score-item">
+            <h2>{{ percentage }}%</h2>
+            <p>Final Score</p>
+        </div>
+
+    </section>
+
+    <!-- PERFORMANCE BAR -->
+    <section class="progress-section">
+
+        <div class="progress-title">
+            <span>Overall Performance</span>
+            <span>{{ percentage }}%</span>
+        </div>
+
+        <div class="progress-track">
+            <div class="progress-fill"></div>
+        </div>
+
+    </section>
+
+    <!-- QUESTION REVIEW -->
+    <h2 class="section-title">
+        Question-wise Review
+    </h2>
+
+    {% if results %}
+
+        {% for item in results %}
+
+        <article class="question-card
+            {% if item.is_correct %}is-correct{% else %}is-incorrect{% endif %}">
+
+            <div class="question-top">
+
+                <span class="question-number">
+                    Question {{ loop.index }}
+                </span>
+
+                {% if item.is_correct %}
+                    <span class="status correct">
+                        ✓ Correct
+                    </span>
+                {% else %}
+                    <span class="status incorrect">
+                        ✗ Incorrect
+                    </span>
+                {% endif %}
+
+            </div>
+
+            {% if item.type %}
+                <span class="question-type">
+                    {{ item.type }}
+                </span>
+            {% endif %}
+
+            <div class="question-text">
+                {{ item.question }}
+            </div>
+
+            <div class="answer-box">
+
+                <div class="answer-row">
+                    <strong>Your Answer:</strong>
+
+                    {% if item.selected_answer_text is defined %}
+                        {{ item.selected_answer_text }}
+                    {% elif item.selected_answer %}
+                        {{ item.selected_answer }}
+                    {% else %}
+                        Not Answered
+                    {% endif %}
+                </div>
+
+                <div class="answer-row">
+                    <strong>Correct Answer:</strong>
+
+                    {% if item.correct_answer_text is defined %}
+                        {{ item.correct_answer_text }}
+                    {% else %}
+                        {{ item.correct_answer }}
+                    {% endif %}
+                </div>
+
+            </div>
+
+            {% if item.explanation %}
+
+            <div class="explanation">
+                <strong>Explanation:</strong>
+                {{ item.explanation }}
+            </div>
+
+            {% endif %}
+
+        </article>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty">
+            <h3>No question results available.</h3>
+            <p>Please generate and attempt a quiz again.</p>
+        </div>
+
+    {% endif %}
+
+    <!-- ACTION BUTTONS -->
+    <div class="actions">
+
+        <a href="{{ url_for('generate_quiz_page') }}"
+           class="btn btn-primary">
+            Generate New Quiz
+        </a>
+
+        <a href="{{ url_for('student_dashboard') }}"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+
+        <button onclick="window.print()"
+                class="btn btn-secondary">
+            Print Result
+        </button>
+
+    </div>
+
+</main>
+
+</body>
+</html>

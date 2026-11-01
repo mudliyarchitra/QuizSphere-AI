@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Quiz Center - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}?v=1005">
+
+    <style>
+        .ai-quiz-page {
+            min-height: 85vh;
+            padding: 55px 25px;
+            background: linear-gradient(135deg, #f5f0ff, #fff5fa);
+        }
+
+        .ai-quiz-center {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .ai-center-header {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .ai-label {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 30px;
+            background: #eee5ff;
+            color: #7139c8;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .ai-center-header h1 {
+            margin: 18px 0 10px;
+            font-size: 38px;
+            color: #30204d;
+        }
+
+        .ai-center-header p {
+            color: #766b85;
+            font-size: 16px;
+        }
+
+        .ai-feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 25px;
+            align-items: stretch;
+        }
+
+        .ai-feature-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 30px 25px;
+            box-shadow: 0 12px 35px rgba(65, 35, 100, 0.09);
+            border: 1px solid #eee7f7;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s ease,
+                        box-shadow 0.25s ease;
+        }
+
+        .ai-feature-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 18px 40px rgba(65, 35, 100, 0.15);
+        }
+
+        .ai-feature-icon {
+            font-size: 42px;
+            margin-bottom: 18px;
+        }
+
+        .feature-badge {
+            display: inline-block;
+            width: fit-content;
+            padding: 7px 13px;
+            border-radius: 20px;
+            background: #f0e8ff;
+            color: #7139c8;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .ai-feature-card h3 {
+            font-size: 22px;
+            color: #30204d;
+            margin: 18px 0 10px;
+        }
+
+        .ai-feature-card p {
+            color: #756b82;
+            line-height: 1.7;
+            font-size: 14px;
+            flex-grow: 1;
+            margin-bottom: 25px;
+        }
+
+        .feature-details {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #faf7ff;
+            border-radius: 13px;
+        }
+
+        .feature-details span {
+            display: block;
+            color: #665779;
+            font-size: 13px;
+            margin: 7px 0;
+        }
+
+        .ai-main-btn {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 18px;
+            border: none;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            color: white;
+            transition: opacity 0.2s ease;
+        }
+
+        .ai-main-btn:hover {
+            opacity: 0.88;
+        }
+
+        .generator-btn {
+            background: linear-gradient(135deg, #7540d8, #a34be8);
+        }
+
+        .smart-btn {
+            background: linear-gradient(135deg, #e34d9b, #a83ed0);
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #e99b35, #e66a48);
+        }
+
+        @media (max-width: 950px) {
+            .ai-feature-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 650px) {
+            .ai-feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-center-header h1 {
+                font-size: 29px;
+            }
+
+            .ai-quiz-page {
+                padding: 35px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="student-navbar">
+
+    <div class="student-logo">
+        🤖 QuizSphere AI
+    </div>
+
+    <div class="student-nav-links">
+
+        <a href="{{ url_for('student_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('my_quizzes') }}">
+            My Quizzes
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}"
+           class="logout-link">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= AI QUIZ CENTER ================= -->
+
+<main class="ai-quiz-page">
+
+    <section class="ai-quiz-center">
+
+        <!-- HEADER -->
+
+        <div class="ai-center-header">
+
+            <span class="ai-label">
+                ✨ POWERED BY AI
+            </span>
+
+            <h1>
+                🤖 AI Quiz Center
+            </h1>
+
+            <p>
+                Choose your quiz creation method and start learning
+                with QuizSphere AI.
+            </p>
+
+        </div>
+
+
+        <!-- ================= THREE PANELS ================= -->
+
+        <div class="ai-feature-grid">
+
+
+            <!-- =========================================
+                 PANEL 1: AI QUIZ GENERATOR
+            ========================================== -->
+
+            <div class="ai-feature-card generator-feature">
+
+                <div class="ai-feature-icon">
+                    🤖
+                </div>
+
+                <span class="feature-badge">
+                    AI GENERATOR
+                </span>
+
+                <h3>
+                    AI Quiz Generator
+                </h3>
+
+                <p>
+                    Enter any subject or topic and let AI
+                    automatically create questions for practice.
+                </p>
+
+                <div class="feature-details">
+
+                    <span>📚 Topic-based questions</span>
+
+                    <span>🎯 Easy, Medium and Hard</span>
+
+                    <span>📝 MCQ, True/False and Fill in the Blanks</span>
+
+                    <span>📖 Practice Mode only</span>
+
+                </div>
+
+                <a href="{{ url_for('generate_quiz_page', mode='topic') }}"
+                   class="ai-main-btn generator-btn">
+
+                    ✨ Generate AI Quiz
+
+                </a>
+
+            </div>
+
+
+            <!-- =========================================
+                 PANEL 2: SMART QUIZ CREATION
+            ========================================== -->
+
+            <div class="ai-feature-card smart-feature">
+
+                <div class="ai-feature-icon">
+                    🧠
+                </div>
+
+                <span class="feature-badge">
+                    SMART CREATION
+                </span>
+
+                <h3>
+                    Smart Quiz Creation
+                </h3>
+
+                <p>
+                    Customize your quiz by selecting a topic,
+                    difficulty, question count and quiz mode.
+                </p>
+
+                <div class="feature-details">
+
+                    <span>⚙️ Custom quiz settings</span>
+
+                    <span>🎚️ Multiple difficulty levels</span>
+
+                    <span>📝 Different question types</span>
+
+                    <span>📖 Practice and Test Mode</span>
+
+                </div>
+
+                <a href="{{ url_for('generate_quiz_page', mode='smart') }}"
+                   class="ai-main-btn smart-btn">
+
+                    🧠 Create Smart Quiz
+
+                </a>
+
+            </div>
+
+
+            <!-- =========================================
+                 PANEL 3: UPLOAD DOCUMENT
+            ========================================== -->
+
+            <div class="ai-feature-card upload-feature">
+
+                <div class="ai-feature-icon">
+                    📄
+                </div>
+
+                <span class="feature-badge">
+                    DOCUMENT QUIZ
+                </span>
+
+                <h3>
+                    Upload Document
+                </h3>
+
+                <p>
+                    Upload your study material and generate
+                    questions based on the content of your document.
+                </p>
+
+                <div class="feature-details">
+
+                    <span>📄 PDF document support</span>
+
+                    <span>📝 DOCX and TXT support</span>
+
+                    <span>🤖 AI-based question generation</span>
+
+                    <span>📖 Practice and Test Mode</span>
+
+                </div>
+
+                <a href="{{ url_for('generate_quiz_page', mode='document') }}"
+                   class="ai-main-btn upload-btn">
+
+                    📤 Upload Study Material
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="student-footer">
+
+    <strong>
+        🤖 QuizSphere AI
+    </strong>
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,595 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Test Result - QuizSphere AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f3ff;
+            color: #25203b;
+            min-height: 100vh;
+            padding: 25px 15px;
+        }
+
+        .result-container {
+            width: min(100%, 1050px);
+            margin: 20px auto;
+            padding: 35px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 15px 50px rgba(43, 25, 85, 0.10);
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .result-icon {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            background: #ede9fe;
+            border-radius: 22px;
+        }
+
+        .result-header h1 {
+            font-size: 34px;
+            font-weight: 800;
+            color: #4c1d95;
+        }
+
+        .subtitle {
+            margin-top: 9px;
+            color: #817894;
+            font-size: 15px;
+        }
+
+        .quiz-info {
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            background: #f5f3ff;
+            border: 1px solid #e4ddff;
+            border-radius: 16px;
+        }
+
+        .quiz-info h2 {
+            margin-bottom: 8px;
+            color: #5b21b6;
+            font-size: 23px;
+        }
+
+        .quiz-info p {
+            color: #756b88;
+            font-size: 14px;
+        }
+
+        .score-card {
+            padding: 35px 30px;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+            border: 1px solid #ddd6fe;
+            border-radius: 22px;
+        }
+
+        .score-label {
+            margin-bottom: 12px;
+            color: #74658c;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .score {
+            color: #5b21b6;
+            font-size: 55px;
+            font-weight: 800;
+        }
+
+        .score span {
+            color: #9b8bb7;
+            font-size: 27px;
+        }
+
+        .percentage {
+            margin-top: 8px;
+            color: #7c3aed;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 15px;
+            margin: 25px auto 18px;
+            overflow: hidden;
+            background: #ddd6fe;
+            border-radius: 30px;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #6d28d9, #a78bfa);
+            border-radius: 30px;
+            transition: width 1s ease;
+        }
+
+        .performance {
+            margin-top: 15px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .excellent { color: #15803d; }
+        .good { color: #2563eb; }
+        .average { color: #d97706; }
+        .poor { color: #dc2626; }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin: 28px 0;
+        }
+
+        .summary-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 25px 15px;
+            background: #faf8ff;
+            border: 1px solid #e9e2fa;
+            border-radius: 17px;
+            transition: 0.25s ease;
+        }
+
+        .summary-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 22px rgba(91, 33, 182, 0.10);
+        }
+
+        .summary-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #5b21b6;
+        }
+
+        .summary-label {
+            color: #74658c;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .correct-text {
+            color: #15803d !important;
+        }
+
+        .incorrect-text,
+        .not-answered {
+            color: #dc2626 !important;
+        }
+
+        .review-section {
+            margin-top: 40px;
+        }
+
+        .review-section h2 {
+            margin-bottom: 8px;
+            color: #4c1d95;
+            font-size: 26px;
+        }
+
+        .review-subtitle {
+            margin-bottom: 22px;
+            color: #817894;
+            font-size: 14px;
+        }
+
+        .question-card {
+            margin-bottom: 20px;
+            padding: 25px;
+            background: #ffffff;
+            border: 1px solid #e7e1f2;
+            border-radius: 17px;
+            box-shadow: 0 5px 18px rgba(35, 20, 70, 0.04);
+        }
+
+        .question-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .question-heading h3 {
+            color: #4c1d95;
+            font-size: 18px;
+        }
+
+        .status-badge {
+            padding: 7px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-correct {
+            color: #15803d;
+            background: #dcfce7;
+        }
+
+        .status-incorrect {
+            color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .question-text {
+            margin-bottom: 20px;
+            color: #29233d;
+            font-size: 16px;
+            line-height: 1.7;
+            font-weight: 600;
+        }
+
+        .answer-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 13px 15px;
+            background: #faf8ff;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .answer-row strong {
+            color: #514568;
+        }
+
+        .explanation {
+            margin-top: 18px;
+            padding: 17px;
+            background: #f5f3ff;
+            border-left: 4px solid #7c3aed;
+            border-radius: 10px;
+        }
+
+        .explanation strong {
+            color: #5b21b6;
+            font-size: 14px;
+        }
+
+        .explanation p {
+            margin-top: 8px;
+            color: #625775;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 35px;
+        }
+
+        .result-btn {
+            display: inline-block;
+            padding: 14px 25px;
+            border-radius: 12px;
+            text-decoration: none;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .primary-btn {
+            color: #ffffff;
+            background: linear-gradient(135deg, #6d28d9, #7c3aed);
+            box-shadow: 0 7px 18px rgba(109, 40, 217, 0.20);
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(109, 40, 217, 0.30);
+        }
+
+        .secondary-btn {
+            color: #6d28d9;
+            background: #ffffff;
+            border: 1px solid #7c3aed;
+        }
+
+        .secondary-btn:hover {
+            color: #ffffff;
+            background: #6d28d9;
+        }
+
+        .footer-text {
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid #eee8f7;
+            text-align: center;
+        }
+
+        .footer-text p {
+            color: #9a8caf;
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 10px;
+            }
+
+            .result-container {
+                padding: 20px 15px;
+                border-radius: 17px;
+            }
+
+            .result-header h1 {
+                font-size: 27px;
+            }
+
+            .score-card {
+                padding: 25px 17px;
+            }
+
+            .score {
+                font-size: 43px;
+            }
+
+            .percentage {
+                font-size: 25px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .summary-box {
+                padding: 18px;
+            }
+
+            .question-card {
+                padding: 18px 14px;
+            }
+
+            .question-heading h3 {
+                font-size: 16px;
+            }
+
+            .result-actions {
+                flex-direction: column;
+            }
+
+            .result-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="result-container">
+
+    <!-- HEADER -->
+    <div class="result-header">
+        <div class="result-icon">🎓</div>
+        <h1>AI Test Result</h1>
+        <p class="subtitle">Your quiz performance summary</p>
+    </div>
+
+    <!-- QUIZ INFORMATION -->
+    <div class="quiz-info">
+        <h2>{{ topic }}</h2>
+        <p>Difficulty: <strong>{{ difficulty }}</strong></p>
+    </div>
+
+    <!-- SCORE CARD -->
+    <div class="score-card">
+
+        <p class="score-label">Your Final Score</p>
+
+        <div class="score">
+            {{ score }} <span>/ {{ total }}</span>
+        </div>
+
+        <div class="percentage">
+            {{ percentage }}%
+        </div>
+
+        <div class="progress-track">
+            <div class="progress-fill"
+                 id="progressFill"
+                 data-percentage="{{ percentage }}">
+            </div>
+        </div>
+
+        {% if percentage|float >= 80 %}
+            <p class="performance excellent">
+                Excellent Performance!
+            </p>
+        {% elif percentage|float >= 60 %}
+            <p class="performance good">
+                Good Job! Keep Practicing.
+            </p>
+        {% elif percentage|float >= 40 %}
+            <p class="performance average">
+                You Can Improve. Keep Learning!
+            </p>
+        {% else %}
+            <p class="performance poor">
+                Keep Practicing. You Can Do Better!
+            </p>
+        {% endif %}
+
+    </div>
+
+    <!-- SUMMARY CARDS -->
+    <div class="summary-grid">
+
+        <div class="summary-box">
+            <span class="summary-number">{{ total }}</span>
+            <span class="summary-label">Total Questions</span>
+        </div>
+
+        <div class="summary-box">
+            <span class="summary-number correct-text">
+                {{ score }}
+            </span>
+            <span class="summary-label">Correct Answers</span>
+        </div>
+
+        <div class="summary-box">
+            <span class="summary-number incorrect-text">
+                {{ total - score }}
+            </span>
+            <span class="summary-label">Incorrect Answers</span>
+        </div>
+
+    </div>
+
+    <!-- QUESTION REVIEW -->
+    <div class="review-section">
+
+        <h2>Question Review</h2>
+
+        <p class="review-subtitle">
+            Check your answers and understand the correct solutions.
+        </p>
+
+        {% for item in results %}
+
+        <div class="question-card">
+
+            <div class="question-heading">
+
+                <h3>Question {{ loop.index }}</h3>
+
+                {% if item.is_correct %}
+                    <span class="status-badge status-correct">
+                        Correct
+                    </span>
+                {% else %}
+                    <span class="status-badge status-incorrect">
+                        Incorrect
+                    </span>
+                {% endif %}
+
+            </div>
+
+            <p class="question-text">
+                {{ item.question }}
+            </p>
+
+            <div class="answer-row">
+                <strong>Your Answer:</strong>
+
+                {% if item.selected_answer %}
+                    <span>{{ item.selected_answer }}</span>
+                {% else %}
+                    <span class="not-answered">Not Answered</span>
+                {% endif %}
+            </div>
+
+            <div class="answer-row">
+                <strong>Correct Answer:</strong>
+                <span class="correct-text">
+                    {{ item.correct_answer }}
+                </span>
+            </div>
+
+            {% if item.explanation %}
+            <div class="explanation">
+                <strong>Explanation:</strong>
+                <p>{{ item.explanation }}</p>
+            </div>
+            {% endif %}
+
+        </div>
+
+        {% else %}
+
+        <div class="question-card">
+            <p>No question review is available.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="result-actions">
+
+        <a href="{{ url_for('generate_quiz_page') }}"
+           class="result-btn primary-btn">
+            Generate Another Quiz
+        </a>
+
+        <a href="{{ url_for('student_dashboard') }}"
+           class="result-btn secondary-btn">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-text">
+        <p>QuizSphere AI | Learn • Practice • Improve</p>
+    </div>
+
+</div>
+
+<!-- DYNAMIC PROGRESS BAR -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const progressFill = document.getElementById("progressFill");
+
+    if (!progressFill) {
+        return;
+    }
+
+    let percentage = parseFloat(
+        progressFill.dataset.percentage
+    );
+
+    if (Number.isNaN(percentage)) {
+        percentage = 0;
+    }
+
+    percentage = Math.max(0, Math.min(100, percentage));
+
+    progressFill.style.width = percentage + "%";
+
+});
+</script>
+
+</body>
+</html>

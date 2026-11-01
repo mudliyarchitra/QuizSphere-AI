@@ -1,0 +1,594 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Test - QuizVerse AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f0ff, #ede7ff, #f8f5ff);
+            color: #26164b;
+            min-height: 100vh;
+            padding: 25px 15px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 25px auto;
+        }
+
+        .header, .quiz-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(75, 35, 145, 0.12);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #45208c, #6938bd, #8654d8);
+            color: #fff;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin-bottom: 12px;
+            font-size: 29px;
+        }
+
+        .header h2 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #eee5ff;
+            margin-top: 5px;
+        }
+
+        .quiz-card {
+            border: 1px solid #e5d8ff;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: #6333ad;
+            font-size: 14px;
+        }
+
+        .progress-track {
+            height: 10px;
+            background: #e9defc;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 28px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #5728a5, #9257df);
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .question.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question h2 {
+            color: #5728a5;
+            font-size: 21px;
+            margin-bottom: 18px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            line-height: 1.7;
+            margin-bottom: 22px;
+            color: #302052;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: #f8f4ff;
+            border: 1px solid #e2d4fa;
+            color: #302052;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 12px 0;
+            cursor: pointer;
+            line-height: 1.5;
+            transition: 0.2s ease;
+        }
+
+        .option:hover {
+            background: #eee5ff;
+            border-color: #7542c5;
+        }
+
+        .option input {
+            margin-top: 4px;
+            accent-color: #6736b5;
+            cursor: pointer;
+        }
+
+        .option:has(input:checked) {
+            background: #eee5ff;
+            border-color: #7542c5;
+        }
+
+        .text-answer {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #d6c4f5;
+            background: #fff;
+            color: #26164b;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .text-answer:focus {
+            border-color: #7542c5;
+            box-shadow: 0 0 0 3px rgba(117, 66, 197, 0.12);
+        }
+
+        .validation-message {
+            display: none;
+            margin-top: 16px;
+            padding: 13px;
+            border-radius: 10px;
+            background: #fff1f2;
+            color: #be123c;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .validation-message.show {
+            display: block;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        button {
+            border: none;
+            padding: 13px 23px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .previous {
+            background: #eee6fc;
+            color: #5728a5;
+        }
+
+        .next {
+            background: linear-gradient(135deg, #5728a5, #8650d2);
+            color: #fff;
+        }
+
+        .submit {
+            display: none;
+            background: linear-gradient(135deg, #198754, #20a56b);
+            color: #fff;
+        }
+
+        .test-note {
+            margin-top: 20px;
+            padding: 13px;
+            border-radius: 10px;
+            background: #f5f0ff;
+            color: #6333ad;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 15px;
+            color: #6333ad;
+            line-height: 1.7;
+        }
+
+        @media(max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                margin: 5px auto;
+            }
+
+            .header, .quiz-card {
+                padding: 19px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+
+            .buttons {
+                flex-wrap: wrap;
+            }
+
+            .buttons button {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>📝 AI Test Mode</h1>
+        <h2>{{ topic|default('AI Quiz') }}</h2>
+        <p>Difficulty: {{ difficulty|default('Medium') }}</p>
+        <p>Answer all questions before submitting.</p>
+    </div>
+
+    {% if questions %}
+
+    <form id="testForm"
+          method="POST"
+          action="{{ url_for('student_submit_ai_test') }}">
+
+        {% if csrf_token is defined %}
+        <input type="hidden"
+               name="csrf_token"
+               value="{{ csrf_token() }}">
+        {% endif %}
+
+        <div class="quiz-card">
+
+            <div class="progress-info">
+                <span id="questionCounter">
+                    Question 1 of {{ questions|length }}
+                </span>
+
+                <span id="answeredCounter">
+                    Answered: 0/{{ questions|length }}
+                </span>
+            </div>
+
+            <div class="progress-track">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            {% for q in questions %}
+
+            {% set q_index = loop.index0 %}
+
+            <div class="question {% if loop.first %}active{% endif %}"
+                 data-index="{{ q_index }}">
+
+                <h2>Question {{ loop.index }}</h2>
+
+                <p class="question-text">{{ q.question }}</p>
+
+                {% if q.type|lower in ["fill in the blanks", "fill in the blank"] %}
+
+                    <input
+                        class="text-answer"
+                        type="text"
+                        name="answer_{{ q_index }}"
+                        placeholder="Enter your answer"
+                        autocomplete="off"
+                        aria-label="Your answer for question {{ loop.index }}"
+                    >
+
+                {% else %}
+
+                    {% for key, option in [
+                        ('A', q.option_a),
+                        ('B', q.option_b),
+                        ('C', q.option_c),
+                        ('D', q.option_d)
+                    ] %}
+
+                        {% if option %}
+
+                        <label class="option">
+
+                            <input
+                                type="radio"
+                                name="answer_{{ q_index }}"
+                                value="{{ key }}"
+                            >
+
+                            <span>
+                                <strong>{{ key }}.</strong>
+                                {{ option }}
+                            </span>
+
+                        </label>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+            <div class="validation-message" id="validationMessage">
+                Please answer this question before continuing.
+            </div>
+
+            <div class="buttons">
+
+                <button
+                    type="button"
+                    class="previous"
+                    id="previousBtn"
+                    disabled>
+                    ← Previous
+                </button>
+
+                <button
+                    type="button"
+                    class="next"
+                    id="nextBtn">
+                    Next →
+                </button>
+
+                <button
+                    type="submit"
+                    class="submit"
+                    id="submitBtn">
+                    Submit Test
+                </button>
+
+            </div>
+
+            <div class="test-note">
+                <strong>Instructions:</strong>
+                Select one answer for each multiple-choice question.
+                Enter your answer for fill-in-the-blanks questions.
+                Use Previous and Next to move between questions.
+                You can revisit your answers before submitting.
+            </div>
+
+        </div>
+
+    </form>
+
+    {% else %}
+
+    <div class="quiz-card empty-state">
+        <h2>No Questions Found</h2>
+        <p>
+            No questions are available for this test.
+            Please generate your quiz again.
+        </p>
+        <br>
+        <a href="{{ url_for('generate_quiz_page') }}">
+            Generate a New Quiz →
+        </a>
+    </div>
+
+    {% endif %}
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const questions = document.querySelectorAll(".question");
+    const total = questions.length;
+
+    if (total === 0) return;
+
+    let current = 0;
+    let submitting = false;
+
+    const previousBtn = document.getElementById("previousBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const progressBar = document.getElementById("progressBar");
+    const questionCounter = document.getElementById("questionCounter");
+    const answeredCounter = document.getElementById("answeredCounter");
+
+    const validationMessage = document.getElementById("validationMessage");
+    const testForm = document.getElementById("testForm");
+
+    function isAnswered(question) {
+
+        const textInput = question.querySelector('input[type="text"]');
+
+        if (textInput) {
+            return textInput.value.trim().length > 0;
+        }
+
+        const radioInputs = question.querySelectorAll('input[type="radio"]');
+
+        return Array.from(radioInputs).some(input => input.checked);
+    }
+
+    function updateAnsweredCounter() {
+
+        let answered = 0;
+
+        questions.forEach(function (question) {
+            if (isAnswered(question)) answered++;
+        });
+
+        answeredCounter.textContent =
+            "Answered: " + answered + "/" + total;
+
+        return answered;
+    }
+
+    function showValidation(message) {
+        validationMessage.textContent = message;
+        validationMessage.classList.add("show");
+    }
+
+    function showQuestion(index) {
+
+        if (index < 0 || index >= total) return;
+
+        questions.forEach(function (question, i) {
+            question.classList.toggle("active", i === index);
+        });
+
+        current = index;
+
+        previousBtn.disabled = current === 0;
+
+        nextBtn.style.display =
+            current === total - 1 ? "none" : "inline-block";
+
+        submitBtn.style.display =
+            current === total - 1 ? "inline-block" : "none";
+
+        questionCounter.textContent =
+            "Question " + (current + 1) + " of " + total;
+
+        progressBar.style.width =
+            ((current + 1) / total * 100) + "%";
+
+        validationMessage.classList.remove("show");
+
+        updateAnsweredCounter();
+    }
+
+    nextBtn.addEventListener("click", function () {
+
+        if (!isAnswered(questions[current])) {
+            showValidation(
+                "Please answer this question before moving to the next question."
+            );
+            return;
+        }
+
+        showQuestion(current + 1);
+    });
+
+    previousBtn.addEventListener("click", function () {
+
+        if (current > 0) {
+            showQuestion(current - 1);
+        }
+    });
+
+    testForm.addEventListener("change", function () {
+        updateAnsweredCounter();
+        validationMessage.classList.remove("show");
+    });
+
+    testForm.addEventListener("input", function () {
+        updateAnsweredCounter();
+        validationMessage.classList.remove("show");
+    });
+
+    testForm.addEventListener("submit", function (event) {
+
+        if (submitting) {
+            event.preventDefault();
+            return;
+        }
+
+        let firstUnanswered = -1;
+
+        questions.forEach(function (question, index) {
+
+            if (firstUnanswered === -1 && !isAnswered(question)) {
+                firstUnanswered = index;
+            }
+
+        });
+
+        if (firstUnanswered !== -1) {
+
+            event.preventDefault();
+
+            showQuestion(firstUnanswered);
+
+            showValidation(
+                "Question " + (firstUnanswered + 1) +
+                " is unanswered. Please answer all questions before submitting."
+            );
+
+            return;
+        }
+
+        const confirmed = confirm(
+            "Are you sure you want to submit your test?"
+        );
+
+        if (!confirmed) {
+            event.preventDefault();
+            return;
+        }
+
+        submitting = true;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+
+        // Form is submitted normally to Flask.
+    });
+
+    showQuestion(0);
+
+});
+</script>
+
+</body>
+</html>

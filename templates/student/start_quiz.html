@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ quiz.title }} - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .quiz-container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .quiz-header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .quiz-header h1 {
+            margin: 0 0 10px;
+            font-size: 28px;
+        }
+
+        .quiz-header p {
+            color: #666;
+        }
+
+        .progress-area {
+            margin-top: 20px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #4f46e5;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-number {
+            color: #4f46e5;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 23px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .option {
+            display: block;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option:hover {
+            border-color: #4f46e5;
+            background: #f5f3ff;
+        }
+
+        .option input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .option.selected {
+            border-color: #4f46e5;
+            background: #eef2ff;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .btn {
+            border: none;
+            padding: 13px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .previous-btn {
+            background: #e5e7eb;
+            color: #333;
+        }
+
+        .next-btn {
+            background: #4f46e5;
+            color: white;
+            margin-left: auto;
+        }
+
+        .submit-btn {
+            background: #16a34a;
+            color: white;
+            margin-left: auto;
+            display: inline-block;
+            visibility: visible;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .warning {
+            color: #dc2626;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .question-counter {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .quiz-container {
+                margin: 15px auto;
+                padding: 10px;
+            }
+
+            .quiz-header {
+                padding: 20px;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .question-text {
+                font-size: 19px;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+
+            .navigation .btn {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="quiz-container">
+
+    <!-- QUIZ HEADER -->
+
+    <div class="quiz-header">
+
+        <h1>{{ quiz.title }}</h1>
+
+        {% if quiz.description %}
+            <p>{{ quiz.description }}</p>
+        {% endif %}
+
+        <div class="progress-area">
+
+            <div class="progress-text">
+                <span>
+                    Question
+                    <span id="currentNumber">1</span>
+                    /
+                    <span id="totalNumber">{{ questions|length }}</span>
+                </span>
+
+                <span id="progressPercent">0%</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUIZ FORM -->
+
+    <form method="POST"
+          action="{{ url_for('submit_quiz', quiz_id=quiz.id) }}"
+          id="quizForm">
+
+        {% for question in questions %}
+
+        <div class="question-card {% if loop.first %}active{% endif %}"
+             data-question="{{ loop.index }}">
+
+            <div class="question-counter">
+                Question {{ loop.index }} of {{ questions|length }}
+            </div>
+
+            <div class="question-text">
+                {{ loop.index }}. {{ question.question }}
+            </div>
+
+
+            <!-- OPTION A -->
+
+            <label class="option">
+                <input type="radio"
+                       name="question_{{ question.id }}"
+                       value="A"
+                       {% if request.form.get('question_' ~ question.id) == 'A' %}checked{% endif %}>
+                <strong>A.</strong>
+                {{ question.option_a }}
+            </label>
+
+
+            <!-- OPTION B -->
+
+            <label class="option">
+                <input type="radio"
+                       name="question_{{ question.id }}"
+                       value="B"
+                       {% if request.form.get('question_' ~ question.id) == 'B' %}checked{% endif %}>
+                <strong>B.</strong>
+                {{ question.option_b }}
+            </label>
+
+
+            <!-- OPTION C -->
+
+            <label class="option">
+                <input type="radio"
+                       name="question_{{ question.id }}"
+                       value="C"
+                       {% if request.form.get('question_' ~ question.id) == 'C' %}checked{% endif %}>
+                <strong>C.</strong>
+                {{ question.option_c }}
+            </label>
+
+
+            <!-- OPTION D -->
+
+            <label class="option">
+                <input type="radio"
+                       name="question_{{ question.id }}"
+                       value="D"
+                       {% if request.form.get('question_' ~ question.id) == 'D' %}checked{% endif %}>
+                <strong>D.</strong>
+                {{ question.option_d }}
+            </label>
+
+
+            <div class="warning">
+                Please select an answer before continuing.
+            </div>
+
+
+            <!-- NAVIGATION BUTTONS -->
+
+            <div class="navigation">
+
+                {% if not loop.first %}
+
+                <button type="button"
+                        class="btn previous-btn"
+                        onclick="previousQuestion()">
+                    ← Previous
+                </button>
+
+                {% else %}
+
+                <div></div>
+
+                {% endif %}
+
+
+                {% if not loop.last %}
+
+                <button type="button"
+                        class="btn next-btn"
+                        onclick="nextQuestion()">
+                    Next →
+                </button>
+
+                {% else %}
+
+                <button type="button"
+                        class="btn submit-btn"
+                        id="submitQuizButton"
+                        onclick="submitQuiz()">
+                    ✓ Submit Quiz
+                </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </form>
+
+</div>
+
+
+<script>
+
+    let currentQuestion = 0;
+
+    const questions = document.querySelectorAll(".question-card");
+
+    const totalQuestions = questions.length;
+
+
+    // SHOW QUESTION
+
+    function showQuestion(index) {
+
+        if (index < 0 || index >= totalQuestions) {
+            return;
+        }
+
+        questions.forEach(function(question) {
+            question.classList.remove("active");
+        });
+
+        questions[index].classList.add("active");
+
+        currentQuestion = index;
+
+        updateProgress();
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    // UPDATE PROGRESS
+
+    function updateProgress() {
+
+        if (totalQuestions === 0) {
+            return;
+        }
+
+        const number = currentQuestion + 1;
+
+        const percentage = Math.round(
+            (number / totalQuestions) * 100
+        );
+
+        document.getElementById("currentNumber").innerText = number;
+
+        document.getElementById("totalNumber").innerText =
+            totalQuestions;
+
+        document.getElementById("progressPercent").innerText =
+            percentage + "%";
+
+        document.getElementById("progressFill").style.width =
+            percentage + "%";
+    }
+
+
+    // CHECK CURRENT ANSWER
+
+    function isAnswered() {
+
+        const current = questions[currentQuestion];
+
+        const selected = current.querySelector(
+            'input[type="radio"]:checked'
+        );
+
+        const warning = current.querySelector(".warning");
+
+        if (!selected) {
+            warning.style.display = "block";
+            return false;
+        }
+
+        warning.style.display = "none";
+
+        return true;
+    }
+
+
+    // NEXT QUESTION
+
+    function nextQuestion() {
+
+        if (!isAnswered()) {
+            return;
+        }
+
+        if (currentQuestion < totalQuestions - 1) {
+            showQuestion(currentQuestion + 1);
+        }
+    }
+
+
+    // PREVIOUS QUESTION
+
+    function previousQuestion() {
+
+        if (currentQuestion > 0) {
+            showQuestion(currentQuestion - 1);
+        }
+    }
+
+
+    // SUBMIT QUIZ
+
+    function submitQuiz() {
+
+        if (totalQuestions === 0) {
+            alert("No questions are available.");
+            return;
+        }
+
+        let unansweredQuestions = [];
+
+        questions.forEach(function(question, index) {
+
+            const selected = question.querySelector(
+                'input[type="radio"]:checked'
+            );
+
+            if (!selected) {
+                unansweredQuestions.push(index);
+            }
+
+        });
+
+
+        if (unansweredQuestions.length > 0) {
+
+            alert(
+                "Please answer all questions before submitting."
+            );
+
+            const firstUnanswered = unansweredQuestions[0];
+
+            showQuestion(firstUnanswered);
+
+            const warning = questions[
+                firstUnanswered
+            ].querySelector(".warning");
+
+            warning.style.display = "block";
+
+            return;
+        }
+
+
+        const confirmSubmit = confirm(
+            "Are you sure you want to submit your quiz?"
+        );
+
+
+        if (confirmSubmit) {
+
+            document.getElementById("quizForm").submit();
+
+        }
+    }
+
+
+    // OPTION SELECT STYLE
+
+    document.querySelectorAll(".option").forEach(function(label) {
+
+        label.addEventListener("click", function() {
+
+            const parent = label.closest(".question-card");
+
+            parent.querySelectorAll(".option").forEach(function(option) {
+                option.classList.remove("selected");
+            });
+
+            label.classList.add("selected");
+
+            const warning = parent.querySelector(".warning");
+
+            if (warning) {
+                warning.style.display = "none";
+            }
+
+        });
+
+    });
+
+
+    // RESTORE SELECTED OPTION STYLE
+
+    document.querySelectorAll(
+        '.option input[type="radio"]'
+    ).forEach(function(input) {
+
+        if (input.checked) {
+            input.closest(".option").classList.add("selected");
+        }
+
+    });
+
+
+    // INITIAL PROGRESS
+
+    updateProgress();
+
+</script>
+
+</body>
+</html>

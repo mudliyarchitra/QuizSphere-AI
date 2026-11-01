@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Quiz - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     TEACHER NAVBAR
+===================================================== -->
+
+<nav class="teacher-navbar">
+
+    <div class="teacher-logo">
+        🤖 QuizSphere AI
+    </div>
+
+    <div class="teacher-nav-links">
+
+        <a href="{{ url_for('teacher_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('create_quiz') }}" class="active">
+            Create Quiz
+        </a>
+
+        <a href="{{ url_for('my_quizzes') }}">
+            My Quizzes
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     MAIN CREATE QUIZ
+===================================================== -->
+
+<main class="create-quiz-page">
+
+    <!-- PAGE HEADER -->
+
+    <section class="create-quiz-header">
+
+        <div class="create-quiz-icon">
+            📝
+        </div>
+
+        <h1>
+            Create New Quiz
+        </h1>
+
+        <p>
+            Create your quiz and add questions after saving.
+        </p>
+
+    </section>
+
+
+    <!-- =================================================
+         QUIZ FORM
+    ================================================== -->
+
+    <section class="create-quiz-card">
+
+        <form action="{{ url_for('create_quiz') }}"
+              method="POST">
+
+
+            <!-- QUIZ TITLE -->
+
+            <div class="create-form-group">
+
+                <label for="title">
+                    Quiz Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="Enter quiz title"
+                    required
+                >
+
+            </div>
+
+
+            <!-- SUBJECT -->
+
+            <div class="create-form-group">
+
+                <label for="subject">
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    placeholder="Example: Python, DBMS, Data Structures"
+                    required
+                >
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="create-form-group">
+
+                <label for="description">
+                    Quiz Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Enter a short description about this quiz"
+                    rows="4"
+                ></textarea>
+
+            </div>
+
+
+            <!-- DURATION -->
+
+            <div class="create-form-group">
+
+                <label for="duration">
+                    Duration (Minutes)
+                </label>
+
+                <input
+                    type="number"
+                    id="duration"
+                    name="duration"
+                    placeholder="Example: 30"
+                    min="1"
+                    required
+                >
+
+            </div>
+
+
+            <!-- TOTAL QUESTIONS -->
+
+            <div class="create-form-group">
+
+                <label for="total_questions">
+                    Number of Questions
+                </label>
+
+                <input
+                    type="number"
+                    id="total_questions"
+                    name="total_questions"
+                    placeholder="Example: 20"
+                    min="1"
+                    required
+                >
+
+            </div>
+
+
+            <!-- DIFFICULTY -->
+
+            <div class="create-form-group">
+
+                <label for="difficulty">
+                    Difficulty Level
+                </label>
+
+                <select
+                    id="difficulty"
+                    name="difficulty"
+                    required
+                >
+
+                    <option value="">
+                        Select difficulty
+                    </option>
+
+                    <option value="Easy">
+                        Easy
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="Hard">
+                        Hard
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- QUIZ STATUS -->
+
+            <div class="create-form-group">
+
+                <label for="published">
+                    Quiz Status
+                </label>
+
+                <select
+                    id="published"
+                    name="published"
+                >
+
+                    <option value="0">
+                        🟡 Save as Draft
+                    </option>
+
+                    <option value="1">
+                        🟢 Publish Quiz
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="create-quiz-actions">
+
+                <a href="{{ url_for('my_quizzes') }}"
+                   class="cancel-quiz-btn">
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="create-quiz-btn">
+
+                    🚀 Create Quiz
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="teacher-footer">
+
+    <strong>
+        🤖 QuizSphere AI
+    </strong>
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>

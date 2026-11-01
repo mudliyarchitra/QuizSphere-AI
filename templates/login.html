@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+
+    <!-- LOGIN CONTAINER -->
+
+    <div class="login-container">
+
+
+        <!-- LOGO OUTSIDE BOX -->
+
+        <div class="login-page-logo">
+            🤖 QuizSphere AI
+        </div>
+
+
+        <!-- LOGIN BOX -->
+
+        <div class="login-card">
+
+
+            <h1>
+                Welcome Back
+            </h1>
+
+
+            <p class="login-subtitle">
+                Choose your account type to continue.
+            </p>
+
+
+            <!-- STUDENT LOGIN -->
+
+            <a href="/student/login">
+
+                <button
+                    type="button"
+                    class="login-btn">
+
+                    👨‍🎓 Student Login
+
+                </button>
+
+            </a>
+
+
+            <!-- TEACHER LOGIN -->
+
+            <a href="/teacher/login">
+
+                <button
+                    type="button"
+                    class="login-btn">
+
+                    👨‍🏫 Teacher Login
+
+                </button>
+
+            </a>
+
+
+            <!-- REGISTER -->
+
+            <div class="login-register-link">
+
+                Don't have an account?
+
+                <a href="/register">
+                    Register
+                </a>
+
+            </div>
+
+
+            <!-- HOME -->
+
+            <div class="login-home-link">
+
+                <a href="/">
+                    ← Back to Home
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

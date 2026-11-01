@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Quizzes - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     TEACHER NAVBAR
+===================================================== -->
+
+<nav class="teacher-navbar">
+
+    <div class="teacher-logo">
+        🤖 QuizSphere AI
+    </div>
+
+    <div class="teacher-nav-links">
+
+        <a href="{{ url_for('teacher_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('create_quiz') }}">
+            Create Quiz
+        </a>
+
+        <a href="{{ url_for('my_quizzes') }}" class="active">
+            My Quizzes
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="teacher-dashboard">
+
+    <section class="teacher-quizzes">
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <div class="teacher-section-heading">
+
+            <div>
+
+                <h1>
+                    📚 My Quizzes
+                </h1>
+
+                <p>
+                    Manage all quizzes created by you.
+                </p>
+
+            </div>
+
+            <a href="{{ url_for('create_quiz') }}">
+                + Create Quiz
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             QUIZZES
+        ================================================== -->
+
+        {% if quizzes %}
+
+            {% for quiz in quizzes %}
+
+            <div class="teacher-quiz-row">
+
+                <!-- QUIZ INFO -->
+
+                <div class="teacher-quiz-info">
+
+                    <div class="teacher-quiz-icon">
+                        📝
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            {{ quiz.title }}
+                        </h3>
+
+                        <p>
+                            {{ quiz.subject }}
+                            •
+                            {{ quiz.total_questions }} Questions
+                            •
+                            {{ quiz.duration }} Minutes
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                {% if quiz.published %}
+
+                    <span class="quiz-published">
+                        🟢 Published
+                    </span>
+
+                {% else %}
+
+                    <span class="quiz-draft">
+                        🟡 Draft
+                    </span>
+
+                {% endif %}
+
+
+                <!-- =================================================
+                     QUIZ ACTIONS
+                ================================================== -->
+
+                <div class="quiz-actions">
+
+                    <!-- PREVIEW -->
+
+                    <a href="{{ url_for('preview_quiz', quiz_id=quiz.id) }}">
+                        👁️ Preview
+                    </a>
+
+
+                    <!-- ADD QUESTIONS -->
+
+                    <a href="{{ url_for('add_questions', quiz_id=quiz.id) }}">
+                        ➕ Add Questions
+                    </a>
+
+
+                    <!-- EDIT QUIZ -->
+
+                    <a href="{{ url_for('edit_quiz', quiz_id=quiz.id) }}">
+                        ✏️ Edit
+                    </a>
+
+
+                    <!-- DELETE QUIZ -->
+
+                    <a href="{{ url_for('delete_quiz', quiz_id=quiz.id) }}"
+                       onclick="return confirm('Are you sure you want to delete this quiz?');">
+                        🗑️ Delete
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+
+        {% else %}
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div class="teacher-action-card">
+
+                <div class="teacher-action-icon">
+                    📚
+                </div>
+
+                <h3>
+                    No Quizzes Yet
+                </h3>
+
+                <p>
+                    Create your first quiz to get started.
+                </p>
+
+                <a href="{{ url_for('create_quiz') }}">
+                    Create Quiz →
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="teacher-footer">
+
+    <strong>
+        🤖 QuizSphere AI
+    </strong>
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>
+

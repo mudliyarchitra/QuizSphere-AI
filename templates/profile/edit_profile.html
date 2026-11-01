@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Profile</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="edit-profile-page">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <h1>EDIT PROFILE</h1>
+        <p>Update your personal details</p>
+    </div>
+
+
+    <!-- PROFILE PHOTO -->
+    <div class="profile-photo-section">
+
+        <div class="profile-photo">
+
+            {% if user.profile_pic %}
+                <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}">
+            {% else %}
+                <div class="default-avatar">👤</div>
+            {% endif %}
+
+        </div>
+
+        <label class="change-photo">
+            Change Photo
+            <input type="file"
+                   name="profile_pic"
+                   form="editProfileForm"
+                   hidden>
+        </label>
+
+    </div>
+
+
+    <!-- MAIN FORM -->
+    <form id="editProfileForm"
+          method="POST"
+          enctype="multipart/form-data">
+
+
+        <!-- PROFILE -->
+        <div class="profile-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    👤
+                </div>
+
+                <div>
+                    <h2>PROFILE</h2>
+                    <p>Basic personal information</p>
+                </div>
+
+            </div>
+
+
+            <!-- NAME -->
+            <div class="form-group">
+
+                <label>Name</label>
+
+                <input type="text"
+                       name="name"
+                       value="{{ user.name or '' }}"
+                       placeholder="Your Name">
+
+            </div>
+
+
+            <!-- EMAIL -->
+            <div class="form-group">
+
+                <label>Email</label>
+
+                <input type="email"
+                       value="{{ user.email }}"
+                       readonly>
+
+            </div>
+            
+            <!-- CONTACT -->
+            <div class="form-group">
+
+            <label>Contact Number</label>
+
+              <input type="tel"
+             name="contact"
+             value="{{ user.contact or '' }}"
+             placeholder="Enter Contact Number"
+             class="contact-input">
+
+          </div>
+      
+
+  
+
+           
+            <!-- GENDER -->
+            <div class="form-group">
+
+                <label>Gender</label>
+
+                <select name="gender">
+
+                    <option value="">Select Gender</option>
+
+                    <option value="Male"
+                        {% if user.gender == "Male" %}selected{% endif %}>
+                        Male
+                    </option>
+
+                    <option value="Female"
+                        {% if user.gender == "Female" %}selected{% endif %}>
+                        Female
+                    </option>
+
+                    <option value="Other"
+                        {% if user.gender == "Other" %}selected{% endif %}>
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ADDRESS -->
+            <div class="form-group">
+
+                <label>Address</label>
+
+                <textarea name="address"
+                          placeholder="Enter your address">{{ user.address or '' }}</textarea>
+
+            </div>
+
+
+            <!-- BIO -->
+            <div class="form-group">
+
+                <label>Bio</label>
+
+                <textarea name="bio"
+                          placeholder="Tell something about you">{{ user.bio or '' }}</textarea>
+
+            </div>
+
+
+            <!-- LANGUAGE -->
+            <div class="form-group">
+
+                <label>Language</label>
+
+                <select name="language">
+
+                    <option value="English"
+                        {% if user.language == "English" %}selected{% endif %}>
+                        English
+                    </option>
+
+                    <option value="Hindi"
+                        {% if user.language == "Hindi" %}selected{% endif %}>
+                        Hindi
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- STUDENT DETAILS -->
+        {% if user.role == "student" %}
+
+        <div class="profile-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    🎓
+                </div>
+
+                <div>
+                    <h2>STUDENT DETAILS</h2>
+                    <p>Academic information</p>
+                </div>
+
+            </div>
+
+
+            <div class="details-grid">
+
+                <!-- ROLL NO -->
+                <div class="form-group">
+
+                    <label>Roll No</label>
+
+                    <input type="text"
+                           name="roll_no"
+                           value="{{ user.roll_no or '' }}"
+                           placeholder="Roll Number">
+
+                </div>
+
+
+                <!-- COURSE -->
+                <div class="form-group">
+
+                    <label>Course</label>
+
+                    <input type="text"
+                           name="course"
+                           value="{{ user.course or '' }}"
+                           placeholder="Course">
+
+                </div>
+
+
+                <!-- YEAR -->
+                <div class="form-group">
+
+                    <label>Year</label>
+
+                    <input type="text"
+                           name="year"
+                           value="{{ user.year or '' }}"
+                           placeholder="Year">
+
+                </div>
+
+
+                <!-- SKILLS -->
+                <div class="form-group">
+
+                    <label>Skills</label>
+
+                    <input type="text"
+                           name="skills"
+                           value="{{ user.skills or '' }}"
+                           placeholder="Skills">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- TEACHER DETAILS -->
+        {% if user.role == "teacher" %}
+
+        <div class="profile-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    👨‍🏫
+                </div>
+
+                <div>
+                    <h2>TEACHER DETAILS</h2>
+                    <p>Professional information</p>
+                </div>
+
+            </div>
+
+
+            <div class="details-grid">
+
+                <!-- SUBJECT -->
+                <div class="form-group">
+
+                    <label>Subject</label>
+
+                    <input type="text"
+                           name="subject"
+                           value="{{ user.subject or '' }}"
+                           placeholder="Subject">
+
+                </div>
+
+
+                <!-- EXPERIENCE -->
+                <div class="form-group">
+
+                    <label>Experience</label>
+
+                    <input type="text"
+                           name="experience"
+                           value="{{ user.experience or '' }}"
+                           placeholder="Experience">
+
+                </div>
+
+
+                <!-- QUALIFICATION -->
+                <div class="form-group">
+
+                    <label>Qualification</label>
+
+                    <input type="text"
+                           name="qualification"
+                           value="{{ user.qualification or '' }}"
+                           placeholder="Qualification">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- SAVE -->
+        <div class="save-section">
+
+            <button type="submit" class="save-btn">
+                SAVE CHANGES
+            </button>
+
+        </div>
+
+
+    </form>
+
+</div>
+
+</body>
+</html>
+

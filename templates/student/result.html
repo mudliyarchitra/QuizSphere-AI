@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Quiz Result - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="student-navbar">
+
+    <div class="student-logo">
+        🤖 QuizSphere AI
+    </div>
+
+    <div class="student-nav-links">
+
+        <a href="{{ url_for('student_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('student_dashboard') }}#available-quizzes">
+            Quizzes
+        </a>
+
+        <a href="{{ url_for('results_history') }}">
+            Results
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}"
+           class="logout-link">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     MAIN RESULT PAGE
+========================= -->
+
+<main class="student-dashboard">
+
+
+    <!-- =========================
+         RESULT HEADER
+    ========================== -->
+
+    <section class="student-welcome">
+
+        <div>
+
+            <span class="welcome-label">
+                🎉 QUIZ COMPLETED
+            </span>
+
+            <h1>
+                {{ quiz.title }}
+            </h1>
+
+            <p>
+                Review your answers, correct answers
+                and explanations below.
+            </p>
+
+        </div>
+
+        <div class="welcome-robot">
+            🏆
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SCORE SUMMARY
+    ========================== -->
+
+    <section class="student-stats">
+
+
+        <!-- SCORE -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📝
+            </div>
+
+            <div>
+
+                <span>
+                    Score
+                </span>
+
+                <h2>
+                    {{ score }} / {{ total }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- PERCENTAGE -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🎯
+            </div>
+
+            <div>
+
+                <span>
+                    Percentage
+                </span>
+
+                <h2>
+                    {{ result.percentage }}%
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                {% if result.percentage >= 50 %}
+                    🏆
+                {% else %}
+                    📚
+                {% endif %}
+
+            </div>
+
+            <div>
+
+                <span>
+                    Status
+                </span>
+
+                <h2>
+
+                    {% if result.percentage >= 50 %}
+
+                        Passed
+
+                    {% else %}
+
+                        Failed
+
+                    {% endif %}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =========================
+         ANSWER REVIEW
+    ========================== -->
+
+    <section class="recent-results">
+
+        <div class="section-heading">
+
+            <h2>
+                📖 Answer Review & Explanations
+            </h2>
+
+        </div>
+
+
+        {% for question in questions %}
+
+
+        <!-- =========================
+             QUESTION CARD
+        ========================== -->
+
+        <div class="result-row"
+             style="
+                display:block;
+                margin-bottom:25px;
+                padding:25px;
+             ">
+
+
+            <!-- QUESTION -->
+
+            <h3>
+
+                Question {{ loop.index }}
+
+            </h3>
+
+
+            <p style="
+                font-size:18px;
+                margin-top:10px;
+                margin-bottom:20px;
+            ">
+
+                <strong>
+                    {{ question.question }}
+                </strong>
+
+            </p>
+
+
+            <!-- =========================
+                 OPTIONS
+            ========================== -->
+
+            <div style="
+                margin-bottom:20px;
+                line-height:1.8;
+            ">
+
+                <p>
+                    <strong>A.</strong>
+                    {{ question.option_a }}
+                </p>
+
+                <p>
+                    <strong>B.</strong>
+                    {{ question.option_b }}
+                </p>
+
+                <p>
+                    <strong>C.</strong>
+                    {{ question.option_c }}
+                </p>
+
+                <p>
+                    <strong>D.</strong>
+                    {{ question.option_d }}
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 STUDENT ANSWER
+            ========================== -->
+
+            {% if student_answers %}
+
+                {% set selected = student_answers.get(question.id) %}
+
+
+                {% if selected == question.correct_answer %}
+
+
+                    <!-- CORRECT -->
+
+                    <div style="
+                        margin-top:15px;
+                        padding:15px;
+                        border-radius:10px;
+                        background:#e8f8ee;
+                    ">
+
+                        <strong>
+                            🟢 Your Answer:
+                        </strong>
+
+                        <span>
+                            {{ selected }}
+                        </span>
+
+                        <strong>
+                            ✔ Correct
+                        </strong>
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <!-- WRONG -->
+
+                    <div style="
+                        margin-top:15px;
+                        padding:15px;
+                        border-radius:10px;
+                        background:#ffeaea;
+                    ">
+
+                        <strong>
+                            🔴 Your Answer:
+                        </strong>
+
+                        <span>
+
+                            {% if selected %}
+
+                                {{ selected }}
+
+                            {% else %}
+
+                                Not Answered
+
+                            {% endif %}
+
+                        </span>
+
+                        <strong>
+                            ✖ Wrong
+                        </strong>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            {% else %}
+
+
+                <!-- ANSWER NOT AVAILABLE -->
+
+                <div style="
+                    margin-top:15px;
+                    padding:15px;
+                    border-radius:10px;
+                    background:#fff5df;
+                ">
+
+                    <strong>
+                        📝 Your Answer:
+                    </strong>
+
+                    <span>
+                        Answer information is not available.
+                    </span>
+
+                </div>
+
+
+            {% endif %}
+
+
+            <!-- =========================
+                 CORRECT ANSWER
+            ========================== -->
+
+            <div style="
+                margin-top:15px;
+                padding:15px;
+                border-radius:10px;
+                background:#eaf2ff;
+            ">
+
+                <strong>
+                    ✅ Correct Answer:
+                </strong>
+
+                <span>
+                    {{ question.correct_answer }}
+                </span>
+
+            </div>
+
+
+            <!-- =========================
+                 EXPLANATION
+            ========================== -->
+
+            <div style="
+                margin-top:15px;
+                padding:18px;
+                border-radius:10px;
+                background:#f5f7ff;
+            ">
+
+                <strong>
+                    💡 Explanation
+                </strong>
+
+
+                {% if question.explanation %}
+
+                    <p style="
+                        margin-top:10px;
+                        line-height:1.7;
+                    ">
+
+                        {{ question.explanation }}
+
+                    </p>
+
+                {% else %}
+
+                    <p style="
+                        margin-top:10px;
+                        line-height:1.7;
+                    ">
+
+                        No explanation provided by the teacher.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- NO QUESTIONS -->
+
+        <div class="result-row">
+
+            <strong>
+                No questions found.
+            </strong>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </section>
+
+
+    <!-- =========================
+         BOTTOM BUTTONS
+    ========================== -->
+
+    <div style="
+        text-align:center;
+        margin:35px 0;
+    ">
+
+
+        <a href="{{ url_for('results_history') }}"
+           class="start-btn">
+
+            📊 Results History
+
+        </a>
+
+
+        <a href="{{ url_for('student_dashboard') }}"
+           class="start-btn">
+
+            🏠 Dashboard
+
+        </a>
+
+
+    </div>
+
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer class="student-footer">
+
+    <strong>
+        🤖 QuizSphere AI
+    </strong>
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>

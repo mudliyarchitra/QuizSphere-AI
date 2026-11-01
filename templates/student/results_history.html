@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Results History - QuizSphere AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="student-navbar">
+
+    <div class="student-logo">
+        🤖 QuizSphere AI
+    </div>
+
+    <div class="student-nav-links">
+
+        <a href="{{ url_for('student_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('student_dashboard') }}#available-quizzes">
+            Quizzes
+        </a>
+
+        <a href="{{ url_for('results_history') }}">
+            Results
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}"
+           class="logout-link">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="student-dashboard">
+
+    <section class="recent-results">
+
+        <div class="section-heading">
+
+            <h1>
+                📊 Results History
+            </h1>
+
+            <a href="{{ url_for('student_dashboard') }}">
+                ← Dashboard
+            </a>
+
+        </div>
+
+
+        {% if results %}
+
+            {% for result in results %}
+
+            <div class="result-row">
+
+                <!-- QUIZ NAME -->
+
+                <div class="result-name">
+
+                    <span>
+                        📝
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            {{ result.quiz.title }}
+                        </strong>
+
+                        <small>
+                            Score:
+                            {{ result.score }}
+                            /
+                            {{ result.total }}
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PERCENTAGE -->
+
+                <strong class="result-score">
+
+                    {{ result.percentage }}%
+
+                </strong>
+
+
+                <!-- VIEW RESULT -->
+
+                <a href="{{ url_for('view_result', result_id=result.id) }}"
+                   class="start-btn">
+
+                    View Result →
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+
+        {% else %}
+
+            <div class="result-row">
+
+                <div class="result-name">
+
+                    <span>
+                        📚
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            No results yet
+                        </strong>
+
+                        <small>
+                            Complete a quiz to see your results here.
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <a href="{{ url_for('student_dashboard') }}#available-quizzes"
+                   class="start-btn">
+
+                    Take a Quiz →
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer class="student-footer">
+
+    <strong>
+        🤖 QuizSphere AI
+    </strong>
+
+    <span>
+        Smart Learning. Smarter Quizzes.
+    </span>
+
+</footer>
+
+</body>
+
+</html>
